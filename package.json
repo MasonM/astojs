@@ -1,0 +1,33 @@
+{
+  "name": "astojs",
+  "version": "0.0.1",
+  "description": "Applescript to Javascript Transpiler",
+  "author": {
+    "name": "Mason Malone",
+    "email": "mason@masonm.org"
+  },
+  "license": "GPLv3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/masonm/astojs.git"
+  },
+  "preferGlobal": "true",
+  "bin": {
+    "astojs": "cli.js"
+  },
+  "dependencies": {
+    "pegjs": "0.8.0",
+    "nomnom": "~1.8.1",
+    "js-beautify": "~1.5.4",
+    "chalk": "~0.5.1"
+  },
+  "devDependencies": {
+     "grunt-contrib-watch": "~0.6.1",
+     "grunt-peg": "~1.5.0",
+     "load-grunt-tasks": "~2.0.0",
+     "shelljs-nodecli": "~0.1.1",
+     "should": "~4.4.2",
+     "time-grunt": "~1.0.0",
+     "grunt": "~0.4.5"
+  }
+}

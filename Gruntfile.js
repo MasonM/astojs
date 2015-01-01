@@ -1,0 +1,42 @@
+"use strict";
+(function () {
+    module.exports = function (grunt) {
+        require("time-grunt")(grunt);
+        require("load-grunt-tasks")(grunt);
+        grunt.initConfig({
+            nodeunit: { files: ["test/**/*_test.js"] },
+            watch: {
+                gruntfile: {
+                    files: "<%= jshint.gruntfile.src %>",
+                    tasks: ["jshint:gruntfile"]
+                },
+                lib: {
+                    files: "<%= jshint.lib.src %>",
+                    tasks: [
+                        "jshint:lib",
+                        "mochacli"
+                    ]
+                },
+                test: {
+                    files: "<%= jshint.test.src %>",
+                    tasks: [
+                        "jshint:test",
+                        "mochacli"
+                    ]
+                }
+            },
+            peg: {
+                spider: {
+                    src: "src/parser.pegjs",
+                    dest: "src/parser.js"
+                }
+            },
+        });
+        grunt.registerTask("default", [
+            "build"
+        ]);
+        grunt.registerTask("build", [
+            "peg",
+        ]);
+    };
+}());
