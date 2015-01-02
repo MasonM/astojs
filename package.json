@@ -6,7 +6,7 @@
     "name": "Mason Malone",
     "email": "mason@masonm.org"
   },
-  "license": "GPLv3",
+  "license": "Apache",
   "repository": {
     "type": "git",
     "url": "https://github.com/masonm/astojs.git"
