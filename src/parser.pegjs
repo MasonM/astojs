@@ -135,7 +135,7 @@ IdentifierStart
 IdentifierPart
   = [a-z0-9_]i
   // "AppleScript provides a loophole to the preceding rules: identifiers whose first and last characters are vertical bars (|) can contain any characters. The leading and trailing vertical bars are not considered part of the identifier."
-  / "|" body:("\\|" / [^|])+ "|" { return body; }
+  / "|" body:("\\|" / [^|])+ "|" { return body.join(""); }
 
 ReservedWord
   = Keyword
@@ -146,8 +146,11 @@ Keyword
   = AndToken
   / OrToken
   / ReturnToken
+  / ToToken
   / SetToken
   / IfToken
+  / EndIfToken
+  / ThenToken
   / ElseToken
   / ForToken
   / FnToken
@@ -298,50 +301,53 @@ Zs = [\u0020\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]
 
 /* Tokens */
 
-AndToken          = "and"         !IdentifierPart
-OrToken           = "or"          !IdentifierPart
-ReturnToken       = "return"      !IdentifierPart
-FnToken           = "fn"          !IdentifierPart
-SetToken          = "set"         !IdentifierPart
-IfToken           = "if"          !IdentifierPart
-ElseToken         = "else"        !IdentifierPart
-ForToken          = "for"         !IdentifierPart
-TrueToken         = "true"        !IdentifierPart
-FalseToken        = "false"       !IdentifierPart
-NullToken         = "null"        !IdentifierPart
-NewToken          = "new"         !IdentifierPart
-UseToken          = "use"         !IdentifierPart
-ThisToken         = "this"        !IdentifierPart
-SuperToken        = "super"       !IdentifierPart
-ThrowToken        = "throw"       !IdentifierPart
-BreakToken        = "break"       !IdentifierPart
-ContinueToken     = "continue"    !IdentifierPart
-DebuggerToken     = "debugger"    !IdentifierPart
-WhileToken        = "while"       !IdentifierPart
-UntilToken        = "until"       !IdentifierPart
-TypeofToken       = "typeof"      !IdentifierPart
-InToken           = "in"          !IdentifierPart
-OfToken           = "of"          !IdentifierPart
-TryToken          = "try"         !IdentifierPart
-ToToken           = "to "         !IdentifierPart
-FinallyToken      = "finally"     !IdentifierPart
-CatchToken        = "catch"       !IdentifierPart
-InstanceofToken   = "instanceof"  !IdentifierPart
-SwitchToken       = "switch"      !IdentifierPart
-CaseToken         = "case"        !IdentifierPart
-DefaultToken      = "default"     !IdentifierPart
-FallthroughToken  = "fallthrough" !IdentifierPart
-NotToken          = "not"         !IdentifierPart
-ImportToken       = "import"      !IdentifierPart
-FromToken         = "from"        !IdentifierPart
-AsToken           = "as"          !IdentifierPart
-ExportToken       = "export"      !IdentifierPart
-DeleteToken       = "delete"      !IdentifierPart
-DoToken           = "do"          !IdentifierPart
-AsyncToken        = "async"       !IdentifierPart
-AwaitToken        = "await"       !IdentifierPart
-GoToken           = "go"          !IdentifierPart
-UndefinedToken    = "undefined"   !IdentifierPart
+AndToken          = "and"           !IdentifierPart
+OrToken           = "or"            !IdentifierPart
+ReturnToken       = "return"        !IdentifierPart
+FnToken           = "fn"            !IdentifierPart
+SetToken          = "set"           !IdentifierPart
+IfToken           = "if"            !IdentifierPart
+ThenToken         = "then"          !IdentifierPart
+ElseToken         = "else"          !IdentifierPart
+EndIfToken        = "end" " if"?    !IdentifierPart
+ForToken          = "for"           !IdentifierPart
+TrueToken         = "true"          !IdentifierPart
+FalseToken        = "false"         !IdentifierPart
+NullToken         = "null"          !IdentifierPart
+MissingValueToken = "missing value" !IdentifierPart
+NewToken          = "new"           !IdentifierPart
+UseToken          = "use"           !IdentifierPart
+ThisToken         = "this"          !IdentifierPart
+SuperToken        = "super"         !IdentifierPart
+ThrowToken        = "throw"         !IdentifierPart
+BreakToken        = "break"         !IdentifierPart
+ContinueToken     = "continue"      !IdentifierPart
+DebuggerToken     = "debugger"      !IdentifierPart
+WhileToken        = "while"         !IdentifierPart
+UntilToken        = "until"         !IdentifierPart
+TypeofToken       = "typeof"        !IdentifierPart
+InToken           = "in"            !IdentifierPart
+OfToken           = "of"            !IdentifierPart
+TryToken          = "try"           !IdentifierPart
+ToToken           = "to"            !IdentifierPart
+FinallyToken      = "finally"       !IdentifierPart
+CatchToken        = "catch"         !IdentifierPart
+InstanceofToken   = "instanceof"    !IdentifierPart
+SwitchToken       = "switch"        !IdentifierPart
+CaseToken         = "case"          !IdentifierPart
+DefaultToken      = "default"       !IdentifierPart
+FallthroughToken  = "fallthrough"   !IdentifierPart
+NotToken          = "not"           !IdentifierPart
+ImportToken       = "import"        !IdentifierPart
+FromToken         = "from"          !IdentifierPart
+AsToken           = "as"            !IdentifierPart
+ExportToken       = "export"        !IdentifierPart
+DeleteToken       = "delete"        !IdentifierPart
+DoToken           = "do"            !IdentifierPart
+AsyncToken        = "async"         !IdentifierPart
+AwaitToken        = "await"         !IdentifierPart
+GoToken           = "go"            !IdentifierPart
+UndefinedToken    = "undefined"     !IdentifierPart
 
 __
   = (WhiteSpace / LineTerminatorSequence / Comment)*
@@ -368,10 +374,9 @@ StatementList
 Statement
   = Block
   / VariableStatement
-  / FunctionDeclaration
+  / ExpressionStatement
   / IfStatement
   / PushStatement  
-  / ExpressionStatement
   / ReturnStatement
   / ForStatement
   / UseStatement
@@ -395,8 +400,8 @@ Block
     }
     
 VariableStatement
-  = SetToken __ declarations:VariableDeclaration EOS {
-      return insertLocationData(new ast.VariableDeclarationStatement(declarations), text(), line(), column());
+  = SetToken __ declaration:VariableDeclaration __ {
+      return insertLocationData(new ast.VariableDeclarationStatement([declaration]), text(), line(), column());
     }
     
 VariableDeclaration
@@ -408,7 +413,7 @@ VariableDeclaration
     }
 
 Initialiser
-  = ToToken !ToToken __ expression:AssignmentExpression { return expression; }
+  = ToToken __ expression:AssignmentExpression { return expression; }
   
 FunctionDeclaration
   = AsyncToken __ FnToken __ id:Identifier __
@@ -463,15 +468,15 @@ FormalParameter
   }
   
 IfStatement
-  = IfToken __ test:Expression __
+  = IfToken __ test:Expression __ ThenToken? __
     consequent:Statement __
     ElseToken __
-    alternate:Statement
+    alternate:Statement __
+    EndIfToken
     {
       return insertLocationData(new ast.IfStatement(test, consequent, alternate), text(), line(), column());
     }
-  / IfToken __ test:Expression __
-    consequent:Statement {
+  / IfToken __ test:Expression __ ThenToken? __ consequent:Statement EndIfToken {
       return insertLocationData(new ast.IfStatement(test, consequent, null), text(), line(), column());
     }
     
@@ -699,7 +704,7 @@ UseIdentifier
   }
     
 ExpressionStatement
-  = !("{" / FnToken) expression:Expression EOS {
+  = !("{" / FnToken) expression:Expression {
       return insertLocationData(new ast.ExpressionStatement(expression), text(), line(), column());
     }
 

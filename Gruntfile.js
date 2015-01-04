@@ -5,6 +5,14 @@
         require("load-grunt-tasks")(grunt);
         grunt.initConfig({
             nodeunit: { files: ["test/**/*_test.js"] },
+            mochacli: {
+                options: {
+                    reporter: "spec",
+                    bail: true,
+                    timeout: 15000
+                },
+                all: ["test/*.js"]
+            },
             watch: {
                 gruntfile: {
                     files: "<%= jshint.gruntfile.src %>",
@@ -33,7 +41,8 @@
             },
         });
         grunt.registerTask("default", [
-            "build"
+            "build",
+            "mochacli"
         ]);
         grunt.registerTask("build", [
             "peg",

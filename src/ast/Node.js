@@ -8,6 +8,21 @@ function Node() {
     configurable: true,
     enumerable: false
   });
+
+  var self = this;
+  this.blockWrap = function() {
+    if (self.type == 'BlockStatement') {
+      return self;
+    }
+
+    var myParent = self.parent;
+    var blockStatement = module.require('./statements/BlockStatement');
+
+    var block = new blockStatement.BlockStatement([self]);
+    block.parent = myParent;
+
+    return block;
+  };
 }
 
 Node.prototype.codegen = function() {

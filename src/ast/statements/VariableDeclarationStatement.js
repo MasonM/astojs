@@ -1,11 +1,14 @@
-var Node = module.require("../Node").Node;
+var Node = module.require("../Node").Node,
+    _ = require('underscore');
 
 function VariableDeclarationStatement(declarations) {
     Node.call(this);
-    this.type = "VariableDeclarationStatement";
+    this.type = "VariableDeclaration";
+    this.kind = "var";
+    this.declarations = declarations;
 
     var self = this;
-    declarations.forEach(function(d) {
+    _(declarations).each(function(d) {
         d.parent = self;
     });
 }

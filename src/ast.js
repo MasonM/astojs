@@ -1,11 +1,14 @@
 var nodes = [
     'Program',
     'VariableDeclarator',
-    'statements/VariableDeclarationStatement',
+    'statements/BlockStatement',
     'statements/ExpressionStatement',
+    'statements/IfStatement',
+    'statements/VariableDeclarationStatement',
     'literals/BooleanLiteral',
     'literals/Identifier',
     'literals/NumberLiteral',
+    'literals/StringLiteral',
 ];
 
 nodes.forEach(function(node) {
