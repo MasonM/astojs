@@ -372,11 +372,10 @@ StatementList
     }
 
 Statement
-  = Block
-  / VariableStatement
-  / ExpressionStatement
+  = VariableStatement
   / IfStatement
   / PushStatement  
+  / ExpressionStatement
   / ReturnStatement
   / ForStatement
   / UseStatement
@@ -472,11 +471,11 @@ IfStatement
     consequent:Statement __
     ElseToken __
     alternate:Statement __
-    EndIfToken
+    (EndIfToken / EOS)
     {
       return insertLocationData(new ast.IfStatement(test, consequent, alternate), text(), line(), column());
     }
-  / IfToken __ test:Expression __ ThenToken? __ consequent:Statement EndIfToken {
+  / IfToken _ test:Expression _ ThenToken? _ consequent:Statement EndIfToken? {
       return insertLocationData(new ast.IfStatement(test, consequent, null), text(), line(), column());
     }
     
@@ -704,7 +703,7 @@ UseIdentifier
   }
     
 ExpressionStatement
-  = !("{" / FnToken) expression:Expression {
+  = !FnToken expression:Expression {
       return insertLocationData(new ast.ExpressionStatement(expression), text(), line(), column());
     }
 
@@ -1127,14 +1126,11 @@ Expression
     }
       
 ArrayLiteral
-  = "[" __ elision:(Elision __)? "]" {
-      return insertLocationData(new ast.ArrayExpression(optionalList(extractOptional(elision, 0))), text(), line(), column());
-    }
-  / "[" __ elements:ElementList __ "]" {
+  = "{" __ "}" { 
+       return new ast.ArrayExpression([]); 
+     }
+  / "{" __ elements:ElementList __ "}" {
       return insertLocationData(new ast.ArrayExpression(elements), text(), line(), column());
-    }
-  / "[" __ elements:ElementList __ "," __ elision:(Elision __)? "]" {
-      return insertLocationData(new ast.ArrayExpression(elements.concat(optionalList(extractOptional(elision, 0)))), text(), line(), column());
     }
 
 ElementList
@@ -1151,14 +1147,11 @@ ElementList
     { return Array.prototype.concat.apply(first, rest); }
     
 ArrayPattern
-  = "[" __ elision:(Elision __)? "]" {
-      return insertLocationData(new ast.ArrayPattern(optionalList(extractOptional(elision, 0))), text(), line(), column());
-    }
-  / "[" __ elements:PatternElementList __ "]" {
+  = "{" __ "}" { 
+       return  new ast.ArrayPattern([]); 
+     }
+  / "{" __ elements:PatternElementList __ "}" {
       return insertLocationData(new ast.ArrayPattern(elements), text(), line(), column());
-    }
-  / "[" __ elements:PatternElementList __ "," __ elision:(Elision __)? "]" {
-      return insertLocationData(new ast.ArrayPattern(elements.concat(optionalList(extractOptional(elision, 0)))), text(), line(), column());
     }
 
 PatternElementList
@@ -1182,10 +1175,7 @@ Elision
   = "," commas:(__ ",")* { return filledArray(commas.length + 1, null); }
 
 ObjectLiteral
-  = "{" __ "}" { 
-       return  new ast.ObjectExpression([]); 
-     }
-  / "{" __ properties:PropertyNameAndValueList __ "}" {
+  = "{" __ properties:PropertyNameAndValueList __ "}" {
        return insertLocationData(new ast.ObjectExpression(properties), text(), line(), column());
      }
   / "{" __ properties:PropertyNameAndValueList __ "," __ "}" {
@@ -1222,10 +1212,7 @@ PropertyName
   / NumericLiteral
   
 ObjectPattern
-  = "{" __ "}" { 
-       return  new ast.ObjectPattern([]); 
-     }
-  / "{" __ properties:PatternPropertyNameAndValueList __ "}" {
+  = "{" __ properties:PatternPropertyNameAndValueList __ "}" {
        return insertLocationData(new ast.ObjectPattern(properties), text(), line(), column());
      }
   / "{" __ properties:PatternPropertyNameAndValueList __ "," __ "}" {

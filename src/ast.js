@@ -1,6 +1,8 @@
 var nodes = [
     'Program',
     'VariableDeclarator',
+    'expressions/ArrayExpression',
+    'expressions/UnaryExpression',
     'statements/BlockStatement',
     'statements/ExpressionStatement',
     'statements/IfStatement',
