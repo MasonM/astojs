@@ -7,6 +7,8 @@ var nodes = [
     'statements/ExpressionStatement',
     'statements/IfStatement',
     'statements/VariableDeclarationStatement',
+    'statements/RepeatForeverStatement',
+    'statements/RepeatNumTimesStatement',
     'literals/BooleanLiteral',
     'literals/Identifier',
     'literals/NumberLiteral',

@@ -163,6 +163,9 @@ Keyword
   / ContinueToken
   / DebuggerToken
   / WhileToken
+  / RepeatToken
+  / EndRepeatToken
+  / TimesToken
   / UntilToken
   / TypeofToken
   / InToken
@@ -324,6 +327,9 @@ BreakToken        = "break"         !IdentifierPart
 ContinueToken     = "continue"      !IdentifierPart
 DebuggerToken     = "debugger"      !IdentifierPart
 WhileToken        = "while"         !IdentifierPart
+RepeatToken       = "repeat"        !IdentifierPart
+EndRepeatToken    = "end" " repeat"? !IdentifierPart
+TimesToken        = "times"         !IdentifierPart
 UntilToken        = "until"         !IdentifierPart
 TypeofToken       = "typeof"        !IdentifierPart
 InToken           = "in"            !IdentifierPart
@@ -385,6 +391,7 @@ Statement
   / ContinueStatement
   / DebuggerStatement
   / WhileStatement
+  / RepeatStatement
   / UntilStatement
   / SwitchStatement
   / FallthroughStatement
@@ -607,6 +614,14 @@ DebuggerStatement
   = DebuggerToken EOS {
       return insertLocationData(new ast.DebuggerStatement(), text(), line(), column());
     }    
+
+RepeatStatement
+  = RepeatToken __ body:Statement __ EndRepeatToken {
+        return insertLocationData(new ast.RepeatForeverStatement(body), text(), line(), column());
+    }
+  / RepeatToken __ num:DecimalLiteral __ TimesToken? __ body:Statement __ EndRepeatToken {
+        return insertLocationData(new ast.RepeatNumTimesStatement(num, body), text(), line(), column());
+    }
 
 WhileStatement
   = WhileToken __ test:Expression __

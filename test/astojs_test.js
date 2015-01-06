@@ -19,8 +19,7 @@ function generateTest(code, expectation) {
   };
 }
 
-describe('literals:', function () {
-  it('true boolean',   generateTest('true', 'true;'));
+describe('literals:', function () { it('true boolean',   generateTest('true', 'true;'));
   it('false boolean',  generateTest('false', 'false;'));
 
   it('decimal number', generateTest('10', '10;'));
@@ -34,16 +33,13 @@ describe('literals:', function () {
 });
 
 describe('variable statement:', function () {
-  it('create variable with number literal', 
+  it('set variable with number literal', 
     generateTest('set a to 5', 'var a=5;'));
-    
-  it('create variable with string literal', 
+  it('set variable with string literal', 
     generateTest('set a to "test"', 'var a="test";'));
-  
-  it('create variable with boolean literal', 
+  it('set variable with boolean literal', 
     generateTest('set a to true', 'var a=true;'));
-    
-  it('create variable with identifier value', 
+  it('set variable with identifier value', 
     generateTest('set a to b', 'var a=b;'));
 });
 
@@ -62,4 +58,12 @@ describe('if statement:', function () {
 
   it('if with else if and else clause', 
     generateTest('if a then b else if b then c else d end if', 'if(a){b;}else{if(b){c;}else{d;}}'));
+});
+
+describe('repeat statement:', function () {
+  it('repeat without test', 
+    generateTest('repeat a end repeat', 'while(true){a;}'));
+
+  it('repeat n times', 
+   generateTest('repeat 5 times a end', 'for(let n=0;n<5;n++){a;}'));
 });
