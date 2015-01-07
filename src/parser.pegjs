@@ -189,6 +189,8 @@ Keyword
   / GoToken
   / NullToken
   / UndefinedToken
+  / DivToken
+  / ModToken
 
 Literal
   = NullLiteral
@@ -354,6 +356,8 @@ AsyncToken        = "async"         !IdentifierPart
 AwaitToken        = "await"         !IdentifierPart
 GoToken           = "go"            !IdentifierPart
 UndefinedToken    = "undefined"     !IdentifierPart
+DivToken          = "div"           !IdentifierPart
+ModToken          = "mod"           !IdentifierPart
 
 __
   = (WhiteSpace / LineTerminatorSequence / Comment)*
@@ -846,9 +850,10 @@ MultiplicativeExpression
 MultiplicativeOperator
   = $("*" ![*=])
   / $("/" !"=")
-  / $("#" !"=")
-  / $("%" ![%=])
-  / $("%%" !"=")  
+  / $("÷" !"=")
+  / $("^" !"=")
+  / $ModToken
+  / $DivToken
 
 ExponentiativeExpression
   = first:UnaryExpression

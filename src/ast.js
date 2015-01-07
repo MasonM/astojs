@@ -2,6 +2,7 @@ var nodes = [
     'Program',
     'VariableDeclarator',
     'expressions/ArrayExpression',
+    'expressions/BinaryExpression',
     'expressions/UnaryExpression',
     'statements/BlockStatement',
     'statements/ExpressionStatement',
