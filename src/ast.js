@@ -3,6 +3,7 @@ var nodes = [
     'VariableDeclarator',
     'expressions/ArrayExpression',
     'expressions/BinaryExpression',
+    'expressions/LogicalExpression',
     'expressions/UnaryExpression',
     'statements/BlockStatement',
     'statements/ExpressionStatement',

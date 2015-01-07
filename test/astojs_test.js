@@ -44,6 +44,12 @@ describe('arithmetic expressions:', function () {
     it('exponentiation',  generateTest('2^4', 'Math.pow(2,4);'));
 });
 
+describe('logical expressions:', function () {
+    it('conjunction', generateTest('a and b', 'a&&b;'))
+    it('disjunction', generateTest('a or b', 'a||b;'))
+    it('negation',    generateTest('not a', '!a;'))
+});
+
 describe('variable statement:', function () {
     it('set variable with number literal', 
         generateTest('set a to 5', 'var a=5;'));
