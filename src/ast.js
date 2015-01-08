@@ -1,9 +1,11 @@
 var nodes = [
     'Program',
+    'Property',
     'VariableDeclarator',
     'expressions/ArrayExpression',
     'expressions/BinaryExpression',
     'expressions/LogicalExpression',
+    'expressions/ObjectExpression',
     'expressions/UnaryExpression',
     'statements/BlockStatement',
     'statements/ExpressionStatement',
