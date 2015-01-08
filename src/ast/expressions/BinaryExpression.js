@@ -1,4 +1,6 @@
-var Node = module.require("../Node").Node;
+var Node = module.require("../Node").Node,
+    StringLiteral = require("../literals/StringLiteral").StringLiteral,
+    ArrayExpression = require("../expressions/ArrayExpression").ArrayExpression;
 
 function BinaryExpression(left, operator, right) {
     Node.call(this);
@@ -16,8 +18,6 @@ BinaryExpression.prototype = Object.create(Node);
 
 BinaryExpression.prototype.codegen = function () {
     if (!Node.prototype.codegen.call(this)) return;
-    this.left = this.left.codegen();
-    this.right = this.right.codegen();
     switch (this.operator) {
         case "div": //intentional fall-through
         case "÷":
@@ -45,7 +45,31 @@ BinaryExpression.prototype.codegen = function () {
                 enumerable: true
             });
             break;
+        case "&":
+            if (this.left instanceof StringLiteral ||
+                this.right instanceof StringLiteral) {
+                this.operator = "+";
+            } else if (this.left instanceof ArrayExpression ||
+                this.right instanceof ArrayExpression) {
+                this.type = 'CallExpression';
+                this.callee = {
+                    "type": "MemberExpression",
+                    "computed": false,
+                    "object": this.left,
+                    "property": {
+                        "type": "Identifier",
+                        "name": "concat"
+                    }
+                };
+                Object.defineProperty(this, 'arguments', {
+                    value: [this.right],
+                    enumerable: true
+                });
+            }
+            break;
     }
+    this.left = this.left.codegen();
+    this.right = this.right.codegen();
 
     return this;
 };

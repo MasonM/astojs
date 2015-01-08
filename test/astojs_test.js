@@ -45,9 +45,17 @@ describe('arithmetic expressions:', function () {
 });
 
 describe('logical expressions:', function () {
-    it('conjunction', generateTest('a and b', 'a&&b;'))
-    it('disjunction', generateTest('a or b', 'a||b;'))
-    it('negation',    generateTest('not a', '!a;'))
+    it('conjunction', generateTest('a and b', 'a&&b;'));
+    it('disjunction', generateTest('a or b', 'a||b;'));
+    it('negation',    generateTest('not a', '!a;'));
+});
+
+describe('concatenation:', function () {
+    it('two strings literals', generateTest('"foo" & "bar"', '"foo"+"bar";'));
+    it('one string, one variable', generateTest('a & "bar"', 'a+"bar";'));
+
+    it('two lists', generateTest('{1, 2} & {4, 5}', '[1,2].concat([4,5]);'));
+    it('one list on left, one variable on right', generateTest('a & {4, 5}', 'a.concat([4,5]);'));
 });
 
 describe('variable statement:', function () {
@@ -64,16 +72,12 @@ describe('variable statement:', function () {
 describe('if statement:', function () {
     it('simple if without end if', 
         generateTest('if a then b', 'if(a){b;}'));
-
     it('simple if with end if', 
         generateTest('if a then b end if', 'if(a){b;}'));
-
     it('simple if, ommitting unnecessary keywords', 
         generateTest('if a b', 'if(a){b;}'));
-
     it('if with else clause', 
         generateTest('if a then b else c end', 'if(a){b;}else{c;}'));
-
     it('if with else if and else clause', 
         generateTest('if a then b else if b then c else d end if', 'if(a){b;}else{if(b){c;}else{d;}}'));
 });
@@ -81,7 +85,6 @@ describe('if statement:', function () {
 describe('repeat statement:', function () {
     it('repeat without test', 
         generateTest('repeat a end repeat', 'while(true){a;}'));
-
     it('repeat n times', 
         generateTest('repeat 5 times a end', 'for(let n=0;n<5;n++){a;}'));
 });

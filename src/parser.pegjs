@@ -824,14 +824,22 @@ NullCoalescingExpression
     { return buildNullCoalescingExpression(first, rest); }
     
 ShiftExpression
-  = first:AdditiveExpression
-    rest:(__ ShiftOperator __ AdditiveExpression)*
+  = first:ConcatenativeExpression
+    rest:(__ ShiftOperator __ ConcatenativeExpression)*
     { return buildBinaryExpression(first, rest); }
 
 ShiftOperator
   = $("<<"  !"=")
   / $(">>>" !"=")
   / $(">>"  !"=")
+
+ConcatenativeExpression
+  = first:AdditiveExpression
+    rest:(__ ConcatenativeOperator __ AdditiveExpression)*
+    { return buildBinaryExpression(first, rest); }
+
+ConcatenativeOperator
+    = $("&" !"&")
 
 AdditiveExpression
   = first:MultiplicativeExpression
