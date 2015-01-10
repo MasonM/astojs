@@ -389,7 +389,6 @@ Statement
   / PushStatement  
   / ExpressionStatement
   / ReturnStatement
-  / ForStatement
   / UseStatement
   / ThrowStatement
   / TryStatement
@@ -662,46 +661,7 @@ CaseClauseTestList
     }
 
 CaseClauseTest
-  = OptionalRange
-  / Expression
-    
-ForStatement
-  = ForToken __
-    item:Identifier __ 
-    index:("," __ Identifier)? __
-    InToken __ array:Expression __
-    body:Statement {
-      return insertLocationData(new ast.ForInStatement(
-        item,
-        extractOptional(index, 2),
-        array,
-        body
-      ), text(), line(), column());
-    }  
-  / ForToken __
-    key:Identifier __ 
-    value:("," __ Identifier)? __
-    OfToken __ object:Expression __
-    body:Statement {
-      return insertLocationData(new ast.ForOfStatement(
-        key,
-        extractOptional(value, 2),
-        object,
-        body
-      ), text(), line(), column());
-    }
-  / ForToken __
-    init:(Expression __)? ";" __
-    test:(Expression __)? ";" __
-    update:(!("{" __ "}") Expression __)?  __
-    body:Statement {
-      return insertLocationData(new ast.ForStatement(
-        extractOptional(init, 0),
-        extractOptional(test, 0),
-        extractOptional(update, 1),
-        body
-      ), text(), line(), column());
-    }
+  = Expression
 
 UseStatement
   = UseToken __ identifiers:UseIdentifierList EOS
@@ -945,12 +905,6 @@ CallExpression
             computed: true
           };
         }
-      / __ "[" __ range:OptionalRange __ "]" {
-        return {
-          type: "RangeMemberExpression",
-          range: range   
-        }
-      }        
       / __ nullPropagatingOperator:"?"? __ "." !"." __ property:IdentifierName {
           return {
             type:     nullPropagatingOperator === "?" ? "NullPropagatingExpression" : "MemberExpression",
@@ -971,8 +925,6 @@ CallExpression
           return insertLocationData(new ast.CurryCallExpression(result, element.arguments), text(), line(), column());
         } else if (element.type === "NullCheckCallExpression") {
           return insertLocationData(new ast.NullCheckCallExpression(result, element.arguments), text(), line(), column());
-        } else if (element.type === "RangeMemberExpression") {
-          return insertLocationData(new ast.RangeMemberExpression(result, element.range), text(), line(), column());
         }
       });
     }
@@ -1003,12 +955,6 @@ MemberExpression
             computed: false 
           };
         }
-      / __ "[" __ range:OptionalRange __ "]" {
-        return {
-          type: "RangeMemberExpression",
-          range: range   
-        }
-      }        
     )*
     {
       return buildTree(first, rest, function (result, element) {
@@ -1016,8 +962,6 @@ MemberExpression
           return insertLocationData(new ast.NullPropagatingExpression(result, element.property, element.computed), text(), line(), column());
         } else if (element.type === "MemberExpression") {
           return insertLocationData(new ast.MemberExpression(result, element.property, element.computed), text(), line(), column());
-        } else if (element.type === "RangeMemberExpression") {
-          return insertLocationData(new ast.RangeMemberExpression(result, element.range), text(), line(), column());
         }
       });
     }
@@ -1109,7 +1053,6 @@ GlobalIdentifierExpression
 PrimaryExpression
   = ThisExpression
   / SuperExpression
-  / RangeExpression
   / Identifier
   / Literal
   / ArrayLiteral
@@ -1125,25 +1068,6 @@ SuperExpression
   = SuperToken {
       return insertLocationData(new ast.SuperExpression(), text(), line(), column());
     }
-
-RangeExpression
-  = "[" __ range:Range __ "]" {
-    return range;
-  }
-
-Range
-  = from:Expression __ operator:RangeOperator __ to:Expression {
-    return insertLocationData(new ast.Range(from, operator, to), text(), line(), column());
-  }
-  
-OptionalRange
-  = from:Expression? __ operator:RangeOperator __ to:Expression? {
-    return insertLocationData(new ast.Range(from, operator, to), text(), line(), column());
-  }
-  
-RangeOperator 
-  = ".." !"." { return ".."; }
-  / "..."
   
 Expression
   = expression:AssignmentExpression {
