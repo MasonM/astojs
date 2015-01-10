@@ -18,6 +18,10 @@ BinaryExpression.prototype = Object.create(Node);
 
 BinaryExpression.prototype.codegen = function () {
     if (!Node.prototype.codegen.call(this)) return;
+    var leftType = this.left.type,
+        rightType = this.right.type;
+    this.left = this.left.codegen();
+    this.right = this.right.codegen();
     switch (this.operator) {
         case "div": //intentional fall-through
         case "÷":
@@ -46,11 +50,9 @@ BinaryExpression.prototype.codegen = function () {
             });
             break;
         case "&":
-            if (this.left instanceof StringLiteral ||
-                this.right instanceof StringLiteral) {
+            if (leftType === "StringLiteral") {
                 this.operator = "+";
-            } else if (this.left instanceof ArrayExpression ||
-                this.right instanceof ArrayExpression) {
+            } else {
                 this.type = 'CallExpression';
                 this.callee = {
                     "type": "MemberExpression",
@@ -62,14 +64,11 @@ BinaryExpression.prototype.codegen = function () {
                     }
                 };
                 Object.defineProperty(this, 'arguments', {
-                    value: [this.right],
-                    enumerable: true
+                    value: [ this.right ]
                 });
             }
             break;
     }
-    this.left = this.left.codegen();
-    this.right = this.right.codegen();
 
     return this;
 };

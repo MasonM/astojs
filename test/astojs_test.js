@@ -32,8 +32,8 @@ describe('literals:', function () {
     it('single-element list', generateTest('{1}', '[1];'));
     it('complex list', generateTest('{1, 7, "Beethoven", 4.5}', '[1,7,"Beethoven",4.5];'));
 
-    it('single-element record', generateTest('{ product: "pen" }', '({product:"pen"});'));
-    it('multi-element record', generateTest('{product:"pen", price:2.34}', '({product:"pen",price:2.34});'));
+    it('single-element record', generateTest('{ product: "pen" }', 'new Record({product:"pen"});'));
+    it('multi-element record', generateTest('{product:"pen", price:2.34}', 'new Record({product:"pen",price:2.34});'));
 });
 
 describe('arithmetic expressions:', function () {
@@ -55,7 +55,7 @@ describe('logical expressions:', function () {
 
 describe('concatenation:', function () {
     it('two strings literals', generateTest('"foo" & "bar"', '"foo"+"bar";'));
-    it('one string, one variable', generateTest('a & "bar"', 'a+"bar";'));
+    it('one string, one variable', generateTest('a & "bar"', 'a.concat("bar");'));
 
     it('two lists', generateTest('{1, 2} & {4, 5}', '[1,2].concat([4,5]);'));
     it('one list on left, one variable on right', generateTest('a & {4, 5}', 'a.concat([4,5]);'));
