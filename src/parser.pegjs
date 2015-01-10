@@ -348,7 +348,9 @@ FallthroughToken  = "fallthrough"   !IdentifierPart
 NotToken          = "not"           !IdentifierPart
 ImportToken       = "import"        !IdentifierPart
 FromToken         = "from"          !IdentifierPart
+WithToken         = "with"          !IdentifierPart
 AsToken           = "as"            !IdentifierPart
+ByToken           = "by"            !IdentifierPart
 ExportToken       = "export"        !IdentifierPart
 DeleteToken       = "delete"        !IdentifierPart
 DoToken           = "do"            !IdentifierPart
@@ -394,14 +396,11 @@ Statement
   / BreakStatement
   / ContinueStatement
   / DebuggerStatement
-  / WhileStatement
   / RepeatStatement
-  / UntilStatement
   / SwitchStatement
   / FallthroughStatement
   / ImportDeclarationStatement
   / ExportDeclarationStatement
-  / DoWhileStatement
   / GoStatement
 
 Block
@@ -596,13 +595,6 @@ ExportSpecifier
   / id:Identifier {
     return insertLocationData(new ast.ExportSpecifier(id, null), text(), line(), column());
   }
-
-DoWhileStatement
-  = DoToken __
-    body:Statement __
-    WhileToken __ test:Expression EOS {
-      return insertLocationData(new ast.DoWhileStatement(test, body), text(), line(), column());
-    }
     
 PushStatement
   = left:LeftHandSideExpression __ "<-" __ right:AssignmentExpression EOS {
@@ -626,18 +618,23 @@ RepeatStatement
   / RepeatToken __ num:DecimalLiteral __ TimesToken? __ body:Statement __ EndRepeatToken {
         return insertLocationData(new ast.RepeatNumTimesStatement(num, body), text(), line(), column());
     }
-
-WhileStatement
-  = WhileToken __ test:Expression __
-    body:Statement {
-      return insertLocationData(new ast.WhileStatement(test, body), text(), line(), column());
-    }
-    
-UntilStatement
-  = UntilToken __ test:Expression __
-    body:Statement {
-      return insertLocationData(new ast.UntilStatement(test, body), text(), line(), column());
-    }
+  / RepeatToken __ WhileToken __ test:Expression __ body:Statement __ EndRepeatToken {
+        return insertLocationData(new ast.RepeatWhileStatement(test, body), text(), line(), column());
+  }
+  / RepeatToken __ UntilToken __ test:Expression __ body:Statement __ EndRepeatToken {
+        return insertLocationData(new ast.RepeatUntilStatement(test, body), text(), line(), column());
+  }
+  / RepeatToken __ WithToken __ loopVariable:Identifier __
+    FromToken __ start:DecimalLiteral __
+    ToToken __ end:DecimalLiteral __
+    step:(ByToken __ DecimalLiteral)? __
+    body:Statement __
+    EndRepeatToken {
+        return insertLocationData(new ast.RepeatRangeStatement(loopVariable, start, end, extractOptional(step, 2), body), text(), line(), column());
+  }
+  / RepeatToken __ WithToken __ loopVariable:Identifier __ InToken __ list:Expression __ body:Statement __ EndIfToken {
+        return insertLocationData(new ast.RepeatListStatement(loopVariable, list, body), text(), line(), column());
+  }
 
 SwitchStatement
   = SwitchToken __ discriminant:Expression __ "{" __

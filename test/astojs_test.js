@@ -90,4 +90,12 @@ describe('repeat statement:', function () {
         generateTest('repeat a end repeat', 'while(true){a;}'));
     it('repeat n times', 
         generateTest('repeat 5 times a end', 'for(let n=0;n<5;n++){a;}'));
+    it('repeat while', 
+        generateTest('repeat while a b end', 'while(a){b;}'));
+    it('repeat until', 
+        generateTest('repeat until a b end', 'while(!a){b;}'));
+    it('repeat with variable from integer to integer', 
+        generateTest('repeat with a from 0 to 5 b end', 'for(let a=0;a<5;a++){b;}'));
+    it('repeat with list', 
+        generateTest('repeat with a in {1,2} b end', 'for(a in[1,2]){b;}'));
 });
