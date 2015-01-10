@@ -386,7 +386,6 @@ StatementList
 Statement
   = VariableStatement
   / IfStatement
-  / PushStatement  
   / ExpressionStatement
   / ReturnStatement
   / UseStatement
@@ -443,20 +442,6 @@ FunctionDeclaration
             )]
           ), 
         text(), line(), column());
-    }
-  / FnToken __ id:Identifier __
-    "(" __ params:(FormalParameterList __)? ")" __
-    inheritsFrom:InheritsFrom?
-    __ body:Block __ 
-    {
-      return insertLocationData(
-          new ast.FunctionDeclarationStatement(id, optionalList(extractOptional(params, 0)), body, inheritsFrom), 
-        text(), line(), column());
-    }
-
-InheritsFrom
-  = "extends" __ call:CallExpression __ {
-      return call;
     }
     
 FormalParameterList
@@ -593,11 +578,6 @@ ExportSpecifier
   }
   / id:Identifier {
     return insertLocationData(new ast.ExportSpecifier(id, null), text(), line(), column());
-  }
-    
-PushStatement
-  = left:LeftHandSideExpression __ "<-" __ right:AssignmentExpression EOS {
-      return insertLocationData(new ast.PushStatement(left, right), text(), line(), column()); 
   }
   
 GoStatement 
@@ -852,7 +832,7 @@ UnaryOperator
   / "!"
   
 PostfixExpression
-  = argument:LeftHandSideExpression _ operator:PostfixOperator? {
+  = argument:GlobalIdentifierExpression _ operator:PostfixOperator? {
       if (operator) {
         return insertLocationData(new ast.UpdateExpression(argument, operator, false), text(), line(), column());
       } else {
@@ -863,108 +843,6 @@ PostfixExpression
 PostfixOperator
   = "++"
   / "--"
-
-LeftHandSideExpression
-  = CallExpression
-
-CallExpression
-  = first:(
-      callee:MemberExpression call:(__ CallExpressionOperator? __ args:Arguments)? {
-        if (!call) {
-          return callee;
-        }
-        
-        var op = extractOptional(call, 1);
-        if (op === "?") {
-          return insertLocationData(new ast.NullCheckCallExpression(callee, extractOptional(call, 3)), text(), line(), column());
-        } else if (op === "^") {
-          return insertLocationData(new ast.CurryCallExpression(callee, extractOptional(call, 3)), text(), line(), column());
-        } else {
-          return insertLocationData(new ast.CallExpression(callee, extractOptional(call, 3)), text(), line(), column());
-        }
-      }
-    )
-    rest:(
-        __ operator:CallExpressionOperator? __ args:Arguments {
-          var type = "CallExpression";
-          if (operator === "?") {
-            type = "NullCheckCallExpression";
-          } else if (operator === "^") {
-            type = "CurryCallExpression";
-          }
-          
-          return { 
-            type: type, 
-            arguments: args 
-          };
-        }    
-      / __ "[" __ property:Expression __ "]" {
-          return {
-            type:     "MemberExpression",
-            property: property,
-            computed: true
-          };
-        }
-      / __ nullPropagatingOperator:"?"? __ "." !"." __ property:IdentifierName {
-          return {
-            type:     nullPropagatingOperator === "?" ? "NullPropagatingExpression" : "MemberExpression",
-            property: property,
-            computed: false
-          };
-        }
-    )*
-    {      
-      return buildTree(first, rest, function(result, element) {
-        if (element.type === "MemberExpression") {
-          return insertLocationData(new ast.MemberExpression(result, element.property, element.computed), text(), line(), column());
-        } if (element.type === "NullPropagatingExpression") {
-          return insertLocationData(new ast.NullPropagatingExpression(result, element.property, element.computed), text(), line(), column());
-        } else if (element.type === "CallExpression") {
-          return insertLocationData(new ast.CallExpression(result, element.arguments), text(), line(), column());
-        } else if (element.type === "CurryCallExpression") {
-          return insertLocationData(new ast.CurryCallExpression(result, element.arguments), text(), line(), column());
-        } else if (element.type === "NullCheckCallExpression") {
-          return insertLocationData(new ast.NullCheckCallExpression(result, element.arguments), text(), line(), column());
-        }
-      });
-    }
-    
-CallExpressionOperator
-  = "?"
-  / "^"
-
-MemberExpression
-  = first:( 
-        FunctionExpression
-      / NewToken __ callee:MemberExpression __ args:Arguments {
-          return insertLocationData(new ast.NewExpression(callee, args), text(), line(), column());
-        }
-    )
-    rest:(
-        __ "[" __ property:Expression __ "]" {
-          return { 
-            type: "MemberExpression",
-            property: property, 
-            computed: true
-          };
-        }    
-      / __ nullPropagatingOperator:"?"? __ "." !"." __ property:IdentifierName {
-          return { 
-            type: nullPropagatingOperator === "?" ? "NullPropagatingExpression" : "MemberExpression",
-            property: property, 
-            computed: false 
-          };
-        }
-    )*
-    {
-      return buildTree(first, rest, function (result, element) {
-        if (element.type === "NullPropagatingExpression") {
-          return insertLocationData(new ast.NullPropagatingExpression(result, element.property, element.computed), text(), line(), column());
-        } else if (element.type === "MemberExpression") {
-          return insertLocationData(new ast.MemberExpression(result, element.property, element.computed), text(), line(), column());
-        }
-      });
-    }
     
 Arguments
   = "(" __ args:(ArgumentList __)? ")" {
@@ -982,69 +860,6 @@ Argument
   }
   / AssignmentExpression
 
-FunctionExpression
-  = FnToken __ id:(Identifier __)?
-    "(" __ params:(FormalParameterList __)? ")" __
-    inheritsFrom:InheritsFrom?
-    __ body:Block __
-    {
-      return insertLocationData(new ast.FunctionExpression(
-        extractOptional(id, 0), 
-        optionalList(extractOptional(params, 0)),
-        body,
-        inheritsFrom
-      ), text(), line(), column());
-    }
-  / "(" __ params:(FormalParameterList __)? ")" 
-    __ operator:FunctionExpressionOperator
-    __ body:Block __
-    {      
-      return insertLocationData(new ast.FunctionExpression(
-        null,
-        optionalList(extractOptional(params, 0)),
-        body,
-        null,
-        operator
-      ), text(), line(), column());
-    }    
-  / "(" __ params:(FormalParameterList __)? ")" 
-    __ operator:FunctionExpressionOperator
-    __ body:Expression __
-    {
-      return insertLocationData(new ast.FunctionExpression(
-        null, 
-        optionalList(extractOptional(params, 0)),
-        body,
-        null,
-        operator
-      ), text(), line(), column());
-    }
-  / ForInExpression
-
-FunctionExpressionOperator
-  = "->"
-  / "=>"
-
-ForInExpression
-  = "[" __ 
-    expression:Expression __
-    ForToken __
-    item:Identifier __
-    index:("," __ Identifier __)?
-    InToken __
-    array:Expression __
-    condition:(IfToken __ Expression __)? 
-    "]" {
-      return insertLocationData(new ast.ForInExpression(
-        expression,
-        item,
-        index ? extractOptional(index, 2) : null,
-        array,
-        condition ? extractOptional(condition, 2) : null
-      ), text(), line(), column());
-    }
-  / GlobalIdentifierExpression
-    
 GlobalIdentifierExpression
   = "::" __ id:Identifier
     { return id.asGlobal(); }
