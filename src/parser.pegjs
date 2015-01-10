@@ -179,10 +179,8 @@ Keyword
   / DefaultToken
   / FallthroughToken
   / NotToken
-  / ImportToken
   / FromToken
   / AsToken
-  / ExportToken
   / DeleteToken
   / AsyncToken
   / AwaitToken
@@ -346,12 +344,10 @@ CaseToken         = "case"          !IdentifierPart
 DefaultToken      = "default"       !IdentifierPart
 FallthroughToken  = "fallthrough"   !IdentifierPart
 NotToken          = "not"           !IdentifierPart
-ImportToken       = "import"        !IdentifierPart
 FromToken         = "from"          !IdentifierPart
 WithToken         = "with"          !IdentifierPart
 AsToken           = "as"            !IdentifierPart
 ByToken           = "by"            !IdentifierPart
-ExportToken       = "export"        !IdentifierPart
 DeleteToken       = "delete"        !IdentifierPart
 DoToken           = "do"            !IdentifierPart
 AsyncToken        = "async"         !IdentifierPart
@@ -397,8 +393,6 @@ Statement
   / RepeatStatement
   / SwitchStatement
   / FallthroughStatement
-  / ImportDeclarationStatement
-  / ExportDeclarationStatement
   / GoStatement
 
 Block
@@ -519,67 +513,7 @@ FallthroughStatement
   = FallthroughToken EOS {
       return insertLocationData(new ast.FallthroughStatement(), text(), line(), column());
     }  
-    
-ImportDeclarationStatement
-  = ImportToken __ specifiers:ImportSpecifierList __ FromToken __ source:StringLiteral EOS {
-    return insertLocationData(new ast.ImportDeclarationStatement(specifiers, source, "named"), text(), line(), column());
-  }
-  / ImportToken __ "*" __ AsToken __ id:Identifier __ FromToken __ source:StringLiteral EOS {
-    return insertLocationData(new ast.ImportDeclarationStatement([
-      new ast.ImportNamespaceSpecifier(id)
-    ], source, "named"), text(), line(), column());
-  }  
-  / ImportToken __ source:StringLiteral __ AsToken __ id:Identifier EOS {
-    return insertLocationData(new ast.ImportDeclarationStatement([
-      new ast.ImportDefaultSpecifier(id)
-    ], source, "default"), text(), line(), column());
-  }
-  
-ImportSpecifierList
-  = first:ImportSpecifier rest:("," __ ImportSpecifier)* { 
-      return buildList(first, rest, 2); 
-    }
 
-ImportSpecifier
-  = id:Identifier __ AsToken __ alias:Identifier {
-    return insertLocationData(new ast.ImportSpecifier(id, alias), text(), line(), column());
-  }
-  / id:Identifier {
-    return insertLocationData(new ast.ImportSpecifier(id, null), text(), line(), column());
-  }
-  
-ExportDeclarationStatement
-  = ExportToken __ specifiers:ExportSpecifierList source:(__ FromToken __ StringLiteral)? EOS {
-    return insertLocationData(new ast.ExportDeclarationStatement(specifiers, extractOptional(source, 3), null, false), text(), line(), column());
-  }
-  / ExportToken __ "*" __ FromToken __ source:StringLiteral EOS {
-    return insertLocationData(new ast.ExportDeclarationStatement([
-      new ast.ExportBatchSpecifier()
-    ], source, null, false), text(), line(), column());
-  }
-  / ExportToken __ statement:VariableStatement {
-    return insertLocationData(new ast.ExportDeclarationStatement(null, null, statement, false), text(), line(), column());
-  }
-  / ExportToken __ statement:FunctionDeclaration {
-    return insertLocationData(new ast.ExportDeclarationStatement(null, null, statement, false), text(), line(), column());
-  }
-  / ExportToken __ DefaultToken __ expression:Expression EOS {
-    return insertLocationData(new ast.ExportDeclarationStatement(null, null, expression, true), text(), line(), column());
-  }    
-  
-ExportSpecifierList
-  = first:ExportSpecifier rest:("," __ ExportSpecifier)* { 
-      return buildList(first, rest, 2); 
-    }
-
-ExportSpecifier
-  = id:Identifier __ AsToken __ alias:Identifier {
-    return insertLocationData(new ast.ExportSpecifier(id, alias), text(), line(), column());
-  }
-  / id:Identifier {
-    return insertLocationData(new ast.ExportSpecifier(id, null), text(), line(), column());
-  }
-  
 GoStatement 
   = GoToken __ body:Block EOS {
     return insertLocationData(new ast.GoStatement(body), text(), line(), column());
