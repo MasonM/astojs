@@ -142,53 +142,115 @@ ReservedWord
   / NullLiteral
   / BooleanLiteral
   
+// Ref: https://developer.apple.com/library/mac/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_keywords.html#//apple_ref/doc/uid/TP40000983-CH222-SW2
 Keyword
-  = AndToken
-  / OrToken
-  / ReturnToken
-  / ToToken
-  / SetToken
-  / IfToken
-  / EndIfToken
-  / ThenToken
+  = "about"
+  / "above"
+  / "after"
+  / "against"
+  / AndToken
+  / "apart from"
+  / "around"
+  / AsToken
+  / "aside from"
+  / "at"
+  / "back"
+  / "before"
+  / "beginning"
+  / "behind"
+  / "below"
+  / "beneath"
+  / "beside"
+  / "between"
+  / "but"
+  / ByToken
+  / "considering"
+  / ContinueToken
+  / "copy"
+  / DivToken
+  / "does"
+  / "eighth"
   / ElseToken
+  / EndToken
+  / "equal"
+  / "equals"
+  / "error"
+  / "every"
+  / "exit"
+  / FalseToken
+  / "fifth"
+  / "first"
   / ForToken
-  / FnToken
-  / NewToken
+  / "fourth"
+  / FromToken
+  / "front"
+  / "get"
+  / "given"
+  / "gloal"
+  / IfToken
+  / "ignoring"
+  / InToken
+  / "instead of"
+  / "into"
+  / "is"
+  / "it"
+  / "its"
+  / "last"
+  / "local"
+  / "me"
+  / "middle"
+  / ModToken
+  / "my"
+  / "ninth"
+  / NotToken
+  / OfToken
+  / OnToken
+  / "onto"
+  / OrToken
+  / "out of"
+  / "over"
+  / "prop"
+  / "property"
+  / "put"
+  / "ref"
+  / "reference"
+  / RepeatToken
+  / ReturnToken
+  / "script"
+  / "second"
+  / SetToken
+  / "seventh"
+  / "since"
+  / "sixth"
+  / "some"
+  / "tell"
+  / "tenth"
+  / "that"
+  / "the"
+  / ThenToken
+  / "third"
+  / "through"
+  / "thru"
+  / "timeout"
+  / TimesToken
+  / ToToken
+  / "transaction"
+  / TrueToken
+  / TryToken
+  / UntilToken
   / UseToken
+  / "where"
+  / WhileToken
+  / "whose"
+  / WithToken
+  / "without"
   / ThisToken
-  / SuperToken
   / ThrowToken
   / BreakToken
-  / ContinueToken
-  / DebuggerToken
-  / WhileToken
-  / RepeatToken
-  / EndRepeatToken
-  / TimesToken
-  / UntilToken
-  / TypeofToken
-  / InToken
-  / OfToken
-  / TryToken
   / CatchToken
-  / FinallyToken
-  / InstanceofToken
-  / SwitchToken
-  / CaseToken
   / DefaultToken
-  / FallthroughToken
-  / NotToken
-  / FromToken
-  / AsToken
-  / DeleteToken
-  / AsyncToken
-  / AwaitToken
-  / GoToken
   / NullToken
   / UndefinedToken
-  / DivToken
-  / ModToken
 
 Literal
   = NullLiteral
@@ -307,52 +369,38 @@ Zs = [\u0020\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]
 AndToken          = "and"           !IdentifierPart
 OrToken           = "or"            !IdentifierPart
 ReturnToken       = "return"        !IdentifierPart
-FnToken           = "fn"            !IdentifierPart
 SetToken          = "set"           !IdentifierPart
 IfToken           = "if"            !IdentifierPart
 ThenToken         = "then"          !IdentifierPart
 ElseToken         = "else"          !IdentifierPart
-EndIfToken        = "end" " if"?    !IdentifierPart
+EndToken          = "end"           !IdentifierPart
 ForToken          = "for"           !IdentifierPart
 TrueToken         = "true"          !IdentifierPart
 FalseToken        = "false"         !IdentifierPart
 NullToken         = "null"          !IdentifierPart
 MissingValueToken = "missing value" !IdentifierPart
-NewToken          = "new"           !IdentifierPart
 UseToken          = "use"           !IdentifierPart
 ThisToken         = "this"          !IdentifierPart
-SuperToken        = "super"         !IdentifierPart
 ThrowToken        = "throw"         !IdentifierPart
 BreakToken        = "break"         !IdentifierPart
 ContinueToken     = "continue"      !IdentifierPart
-DebuggerToken     = "debugger"      !IdentifierPart
 WhileToken        = "while"         !IdentifierPart
 RepeatToken       = "repeat"        !IdentifierPart
-EndRepeatToken    = "end" " repeat"? !IdentifierPart
 TimesToken        = "times"         !IdentifierPart
 UntilToken        = "until"         !IdentifierPart
-TypeofToken       = "typeof"        !IdentifierPart
 InToken           = "in"            !IdentifierPart
 OfToken           = "of"            !IdentifierPart
 TryToken          = "try"           !IdentifierPart
+OnToken           = "on"            !IdentifierPart
 ToToken           = "to"            !IdentifierPart
-FinallyToken      = "finally"       !IdentifierPart
 CatchToken        = "catch"         !IdentifierPart
-InstanceofToken   = "instanceof"    !IdentifierPart
-SwitchToken       = "switch"        !IdentifierPart
-CaseToken         = "case"          !IdentifierPart
 DefaultToken      = "default"       !IdentifierPart
-FallthroughToken  = "fallthrough"   !IdentifierPart
 NotToken          = "not"           !IdentifierPart
 FromToken         = "from"          !IdentifierPart
 WithToken         = "with"          !IdentifierPart
 AsToken           = "as"            !IdentifierPart
 ByToken           = "by"            !IdentifierPart
-DeleteToken       = "delete"        !IdentifierPart
 DoToken           = "do"            !IdentifierPart
-AsyncToken        = "async"         !IdentifierPart
-AwaitToken        = "await"         !IdentifierPart
-GoToken           = "go"            !IdentifierPart
 UndefinedToken    = "undefined"     !IdentifierPart
 DivToken          = "div"           !IdentifierPart
 ModToken          = "mod"           !IdentifierPart
@@ -382,18 +430,18 @@ StatementList
 Statement
   = VariableStatement
   / IfStatement
-  / ExpressionStatement
   / ReturnStatement
   / UseStatement
   / ThrowStatement
   / TryStatement
   / BreakStatement
-  / ContinueStatement
-  / DebuggerStatement
   / RepeatStatement
-  / SwitchStatement
-  / FallthroughStatement
-  / GoStatement
+  / ExpressionStatement
+    
+ExpressionStatement
+  = !OnToken expression:Expression {
+      return insertLocationData(new ast.ExpressionStatement(expression), text(), line(), column());
+    }
 
 Block
   = "{" __ body:(StatementList __)? "}" {
@@ -417,24 +465,13 @@ Initialiser
   = ToToken __ expression:AssignmentExpression { return expression; }
   
 FunctionDeclaration
-  = AsyncToken __ FnToken __ id:Identifier __
+  = (OnToken / ToToken) __ id:Identifier __
     "(" __ params:(FormalParameterList __)? ")" __
-    inheritsFrom:InheritsFrom?
-    __ body:Block __ 
+    __ body:StatementList __ 
+    EndToken Identifier?
     {
       return insertLocationData(
-          new ast.VariableDeclarationStatement(
-            [new ast.VariableDeclarator(id, 
-              new ast.UnaryExpression("async", 
-                new ast.FunctionExpression(
-                  null, 
-                  optionalList(extractOptional(params, 0)),
-                  body,
-                  inheritsFrom
-                )
-              )
-            )]
-          ), 
+          new ast.SubroutinePositionalDeclarationStatement(id, optionalList(extractOptional(params, 0)), body), 
         text(), line(), column());
     }
     
@@ -459,11 +496,11 @@ IfStatement
     consequent:Statement __
     ElseToken __
     alternate:Statement __
-    (EndIfToken / EOS)
+    (EndToken _ IfToken? / EOS)
     {
       return insertLocationData(new ast.IfStatement(test, consequent, alternate), text(), line(), column());
     }
-  / IfToken _ test:Expression _ ThenToken? _ consequent:Statement EndIfToken? {
+  / IfToken _ test:Expression _ ThenToken? _ consequent:Statement _ (EndToken _ IfToken)? {
       return insertLocationData(new ast.IfStatement(test, consequent, null), text(), line(), column());
     }
     
@@ -481,14 +518,8 @@ ThrowStatement
     }
     
 TryStatement
-  = TryToken __ block:Block __ handler:Catch __ finalizer:Finally {
-      return insertLocationData(new ast.TryStatement(block, handler, finalizer), text(), line(), column());
-    }
-  / TryToken __ block:Block __ handler:Catch {
+  = TryToken __ block:Block __ handler:Catch {
       return insertLocationData(new ast.TryStatement(block, handler, null), text(), line(), column());
-    }
-  / TryToken __ block:Block __ finalizer:Finally {
-      return insertLocationData(new ast.TryStatement(block, null, finalizer), text(), line(), column());
     }
     
 Catch
@@ -496,45 +527,22 @@ Catch
       return insertLocationData(new ast.CatchClause(param, body), text(), line(), column());
     }
 
-Finally
-  = FinallyToken __ block:Block { return block; }
-
 BreakStatement
   = BreakToken EOS {
       return insertLocationData(new ast.BreakStatement(), text(), line(), column());
     }
-    
-ContinueStatement
-  = ContinueToken EOS {
-      return insertLocationData(new ast.ContinueStatement(), text(), line(), column());
-    }
-    
-FallthroughStatement
-  = FallthroughToken EOS {
-      return insertLocationData(new ast.FallthroughStatement(), text(), line(), column());
-    }  
-
-GoStatement 
-  = GoToken __ body:Block EOS {
-    return insertLocationData(new ast.GoStatement(body), text(), line(), column());
-  }
-  
-DebuggerStatement
-  = DebuggerToken EOS {
-      return insertLocationData(new ast.DebuggerStatement(), text(), line(), column());
-    }    
 
 RepeatStatement
-  = RepeatToken __ body:Statement __ EndRepeatToken {
+  = RepeatToken __ body:Statement __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatForeverStatement(body), text(), line(), column());
     }
-  / RepeatToken __ num:DecimalLiteral __ TimesToken? __ body:Statement __ EndRepeatToken {
+  / RepeatToken __ num:DecimalLiteral __ TimesToken? __ body:Statement __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatNumTimesStatement(num, body), text(), line(), column());
     }
-  / RepeatToken __ WhileToken __ test:Expression __ body:Statement __ EndRepeatToken {
+  / RepeatToken __ WhileToken __ test:Expression __ body:Statement __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatWhileStatement(test, body), text(), line(), column());
   }
-  / RepeatToken __ UntilToken __ test:Expression __ body:Statement __ EndRepeatToken {
+  / RepeatToken __ UntilToken __ test:Expression __ body:Statement __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatUntilStatement(test, body), text(), line(), column());
   }
   / RepeatToken __ WithToken __ loopVariable:Identifier __
@@ -542,40 +550,12 @@ RepeatStatement
     ToToken __ end:DecimalLiteral __
     step:(ByToken __ DecimalLiteral)? __
     body:Statement __
-    EndRepeatToken {
+    EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatRangeStatement(loopVariable, start, end, extractOptional(step, 2), body), text(), line(), column());
   }
-  / RepeatToken __ WithToken __ loopVariable:Identifier __ InToken __ list:Expression __ body:Statement __ EndIfToken {
+  / RepeatToken __ WithToken __ loopVariable:Identifier __ InToken __ list:Expression __ body:Statement __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatListStatement(loopVariable, list, body), text(), line(), column());
   }
-
-SwitchStatement
-  = SwitchToken __ discriminant:Expression __ "{" __
-    cases:CaseClauseList __ 
-    "}" {
-      return insertLocationData(new ast.SwitchStatement(discriminant, cases), text(), line(), column());
-    }
-    
-CaseClauseList
-  = first:CaseClause rest:(__ ","? __ CaseClause)* { 
-      return buildList(first, rest, 3); 
-    }
-    
-CaseClause
-  = CaseToken __ tests:CaseClauseTestList __ ":" __ body:Statement {
-      return insertLocationData(new ast.CaseClause(tests, body), text(), line(), column());
-    }
-  / DefaultToken __ ":" __ body:Statement {
-      return insertLocationData(new ast.CaseClause(null, body), text(), line(), column());
-    }
-
-CaseClauseTestList
-  = first:CaseClauseTest rest:("," __ CaseClauseTest)* { 
-      return buildList(first, rest, 2); 
-    }
-
-CaseClauseTest
-  = Expression
 
 UseStatement
   = UseToken __ identifiers:UseIdentifierList EOS
@@ -591,11 +571,6 @@ UseIdentifier
   / ":" id:Identifier {
     return id.asPredefinedCollection();
   }
-    
-ExpressionStatement
-  = !FnToken expression:Expression {
-      return insertLocationData(new ast.ExpressionStatement(expression), text(), line(), column());
-    }
 
 AssignmentExpression
   = left:Pattern __ "=" !"=" __ right:AssignmentExpression {
@@ -678,7 +653,6 @@ RelationalOperator
   / ">="
   / $("<" !"<")
   / $(">" !">")
-  / $InstanceofToken
 
 InExpression
   = left:NullCoalescingExpression
@@ -753,11 +727,7 @@ UnaryExpression
   / PostfixExpression
 
 UnaryOperator
-  = $DeleteToken
-  / $TypeofToken
-  / $AsyncToken
-  / $AwaitToken
-  / $NotToken { return "!" }
+  = $NotToken { return "!" }
   / "<-"
   / "++"
   / "--"
@@ -801,7 +771,6 @@ GlobalIdentifierExpression
   
 PrimaryExpression
   = ThisExpression
-  / SuperExpression
   / Identifier
   / Literal
   / ArrayLiteral
@@ -811,11 +780,6 @@ PrimaryExpression
 ThisExpression
   = ThisToken {
       return insertLocationData(new ast.ThisExpression(), text(), line(), column());
-    }
-    
-SuperExpression
-  = SuperToken {
-      return insertLocationData(new ast.SuperExpression(), text(), line(), column());
     }
   
 Expression

@@ -58,7 +58,10 @@ describe('concatenation:', function () {
     it('one string, one variable', generateTest('a & "bar"', 'a.concat("bar");'));
 
     it('two lists', generateTest('{1, 2} & {4, 5}', '[1,2].concat([4,5]);'));
-    it('one list on left, one variable on right', generateTest('a & {4, 5}', 'a.concat([4,5]);'));
+    it('one variable on left, one list on right', generateTest('a & {4, 5}', 'a.concat([4,5]);'));
+
+    it('two records', generateTest('{foo: "bar"} & {bam: "baz"}', 'new Record({foo:"bar"}).concat(new Record({bam:"baz"}));'));
+    it('one variable on left, one record on right', generateTest('a & {foo:"bar"}', 'a.concat(new Record({foo:"bar"}));'));
 });
 
 describe('variable statement:', function () {
