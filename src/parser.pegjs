@@ -226,7 +226,7 @@ Keyword
   / "tell"
   / "tenth"
   / "that"
-  / "the"
+  / TheToken
   / ThenToken
   / "third"
   / "through"
@@ -371,6 +371,7 @@ OrToken           = "or"            !IdentifierPart
 ReturnToken       = "return"        !IdentifierPart
 SetToken          = "set"           !IdentifierPart
 IfToken           = "if"            !IdentifierPart
+TheToken          = "the"           !IdentifierPart
 ThenToken         = "then"          !IdentifierPart
 ElseToken         = "else"          !IdentifierPart
 EndToken          = "end"           !IdentifierPart
@@ -406,10 +407,10 @@ DivToken          = "div"           !IdentifierPart
 ModToken          = "mod"           !IdentifierPart
 
 __
-  = (WhiteSpace / LineTerminatorSequence / Comment)*
+  = (WhiteSpace / LineTerminatorSequence / Comment / TheToken)*
 
 _
-  = (WhiteSpace / MultiLineCommentNoLineTerminator)*
+  = (WhiteSpace / MultiLineCommentNoLineTerminator / TheToken)*
   
 EOS
   = __ (LineTerminatorSequence / EOF)
@@ -429,6 +430,7 @@ StatementList
 
 Statement
   = VariableStatement
+  / FunctionDeclaration
   / IfStatement
   / ReturnStatement
   / UseStatement
@@ -444,7 +446,7 @@ ExpressionStatement
     }
 
 Block
-  = "{" __ body:(StatementList __)? "}" {
+  = body:(StatementList __)? {
       return insertLocationData(new ast.BlockStatement(optionalList(extractOptional(body, 0))), text(), line(), column());
     }
     
@@ -466,52 +468,48 @@ Initialiser
   
 FunctionDeclaration
   = (OnToken / ToToken) __ id:Identifier __
-    "(" __ params:(FormalParameterList __)? ")" __
-    __ body:StatementList __ 
-    EndToken Identifier?
+    "(" __ params:(ParameterList __)? ")" __
+    __ body:Block __ 
+    EndToken _ Identifier?
     {
       return insertLocationData(
           new ast.SubroutinePositionalDeclarationStatement(id, optionalList(extractOptional(params, 0)), body), 
-        text(), line(), column());
+       text(), line(), column());
     }
     
-FormalParameterList
-  = first:FormalParameter rest:(__ "," __ FormalParameter)* {
+ParameterList
+  = first:Parameter rest:(__ "," __ Parameter)* {
       return buildList(first, rest, 3);
     }
     
-FormalParameter
-  = id:Identifier __ "=" __ defaultValue:Expression {
-    return insertLocationData(new ast.Parameter(id, defaultValue, false), text(), line(), column());
-  }
-  / id:Identifier __ "..." {
-    return insertLocationData(new ast.Parameter(id, null, true), text(), line(), column());
+Parameter
+  = label:Identifier __ ":" __ id:Identifier{
+    return insertLocationData(new ast.Parameter(label, id), text(), line(), column());
   }
   / id:Identifier {
-    return insertLocationData(new ast.Parameter(id, null, false), text(), line(), column());
+    return insertLocationData(new ast.Parameter(null, id), text(), line(), column());
   }
   
 IfStatement
   = IfToken __ test:Expression __ ThenToken? __
-    consequent:Statement __
-    ElseToken __
-    alternate:Statement __
+    consequent:Block __
+    alternate:(ElseToken __ Block __)?
     (EndToken _ IfToken? / EOS)
     {
-      return insertLocationData(new ast.IfStatement(test, consequent, alternate), text(), line(), column());
+      return insertLocationData(new ast.IfStatement(test, consequent, extractOptional(alternate, 2)), text(), line(), column());
     }
   / IfToken _ test:Expression _ ThenToken? _ consequent:Statement _ (EndToken _ IfToken)? {
       return insertLocationData(new ast.IfStatement(test, consequent, null), text(), line(), column());
     }
     
 ReturnStatement
-  = ReturnToken EOS {
-      return insertLocationData(new ast.ReturnStatement(null), text(), line(), column());
-    }
-  / ReturnToken _ argument:Expression EOS {
+  = ReturnToken _ argument:Expression {
       return insertLocationData(new ast.ReturnStatement(argument), text(), line(), column());
     }
-    
+  / ReturnToken {
+      return insertLocationData(new ast.ReturnStatement(null), text(), line(), column());
+    }
+
 ThrowStatement
   = ThrowToken _ argument:Expression EOS {
       return insertLocationData(new ast.ThrowStatement(argument), text(), line(), column());
@@ -533,27 +531,27 @@ BreakStatement
     }
 
 RepeatStatement
-  = RepeatToken __ body:Statement __ EndToken _ RepeatToken? {
+  = RepeatToken __ body:Block __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatForeverStatement(body), text(), line(), column());
     }
-  / RepeatToken __ num:DecimalLiteral __ TimesToken? __ body:Statement __ EndToken _ RepeatToken? {
+  / RepeatToken __ num:DecimalLiteral __ TimesToken? __ body:Block __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatNumTimesStatement(num, body), text(), line(), column());
     }
-  / RepeatToken __ WhileToken __ test:Expression __ body:Statement __ EndToken _ RepeatToken? {
+  / RepeatToken __ WhileToken __ test:Expression __ body:Block __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatWhileStatement(test, body), text(), line(), column());
   }
-  / RepeatToken __ UntilToken __ test:Expression __ body:Statement __ EndToken _ RepeatToken? {
+  / RepeatToken __ UntilToken __ test:Expression __ body:Block __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatUntilStatement(test, body), text(), line(), column());
   }
   / RepeatToken __ WithToken __ loopVariable:Identifier __
     FromToken __ start:DecimalLiteral __
     ToToken __ end:DecimalLiteral __
     step:(ByToken __ DecimalLiteral)? __
-    body:Statement __
+    body:Block __
     EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatRangeStatement(loopVariable, start, end, extractOptional(step, 2), body), text(), line(), column());
   }
-  / RepeatToken __ WithToken __ loopVariable:Identifier __ InToken __ list:Expression __ body:Statement __ EndToken _ RepeatToken? {
+  / RepeatToken __ WithToken __ loopVariable:Identifier __ InToken __ list:Expression __ body:Block __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatListStatement(loopVariable, list, body), text(), line(), column());
   }
 
@@ -854,7 +852,7 @@ PropertyAssignment
       return insertLocationData(new ast.Property(key, value, false, false), text(), line(), column());
     }
   / key:PropertyName __ 
-    "(" __ params:(FormalParameterList __)? ")"
+    "(" __ params:(ParameterList __)? ")"
     __ body:Block __
     {
       return insertLocationData(new ast.Property(key, new ast.FunctionExpression(

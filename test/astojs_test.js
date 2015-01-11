@@ -86,6 +86,8 @@ describe('if statement:', function () {
         generateTest('if a then b else c end', 'if(a){b;}else{c;}'));
     it('if with else if and else clause', 
         generateTest('if a then b else if b then c else d end if', 'if(a){b;}else{if(b){c;}else{d;}}'));
+    it('if with multi-statement body', generateTest("if a then\nb\nc\nend if", "if(a){b;c;}"));
+    it('multiple nested ifs', generateTest("if a then\nif b\nc\nend end if", "if(a){if(b){c;}}"));
 });
 
 describe('repeat statement:', function () {
@@ -101,4 +103,17 @@ describe('repeat statement:', function () {
         generateTest('repeat with a from 0 to 5 b end', 'for(let a=0;a<5;a++){b;}'));
     it('repeat with list', 
         generateTest('repeat with a in {1,2} b end', 'for(a in[1,2]){b;}'));
+});
+
+describe('subroutines:', function () {
+    it('simple subroutine with no parameters', generateTest('on helloWorld() return a end', 'function helloWorld(){return a;}'));
+    it('simple positional subroutine with a couple parameters', generateTest("on minimumValue(x, y) x end minimumValue", "function minimumValue(x,y){x;}"));
+
+    it('complex positional subroutine with a couple parameters', generateTest("on minimumValue(x, y)\n"+
+        "if x < y then\n" +
+        "   return x\n" + 
+        "else\n" + 
+        "   return y\n" +
+        "end if\n" + 
+    "end minimumValue", 'function minimumValue(x,y){if(x<y){return x;}else{return y;}}'));
 });

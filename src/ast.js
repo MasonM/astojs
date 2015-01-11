@@ -1,4 +1,5 @@
 var nodes = [
+    'Parameter',
     'Program',
     'Property',
     'VariableDeclarator',
@@ -17,6 +18,8 @@ var nodes = [
     'statements/RepeatRangeStatement',
     'statements/RepeatUntilStatement',
     'statements/RepeatWhileStatement',
+    'statements/ReturnStatement',
+    'statements/SubroutinePositionalDeclarationStatement',
     'literals/BooleanLiteral',
     'literals/Identifier',
     'literals/NumberLiteral',
