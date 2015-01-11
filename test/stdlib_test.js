@@ -30,3 +30,34 @@ describe('basic record test:', function () {
         testRecord.equals(testRecordCopy).should.be.false;
     });
 });
+
+describe('array containment test:', function () {
+    var testArray1 = ["foo", 2, "bar"];
+    it("startWith using a string", function() {
+        testArray1.startsWith("foo").should.be.true;
+        testArray1.startsWith("bar").should.be.false;
+    });
+
+    it("startWith using an array", function() {
+        testArray1.startsWith(["foo", 2, "bar"]).should.be.true;
+        testArray1.startsWith(["foo", 2]).should.be.true;
+        testArray1.startsWith(["foo"]).should.be.true;
+
+        testArray1.startsWith(["bar"]).should.be.false;
+        testArray1.startsWith(["foo", 2, "bar", 4]).should.be.false;
+    });
+
+    it("endsWith using a string", function() {
+        testArray1.endsWith("bar").should.be.true;
+        testArray1.endsWith("foo").should.be.false;
+    });
+
+    it("endsWith using an array", function() {
+        testArray1.endsWith(["bar"]).should.be.true;
+        testArray1.endsWith([2, "bar"]).should.be.true;
+        testArray1.endsWith(["foo", 2, "bar"]).should.be.true;
+
+        testArray1.endsWith(["foo"]).should.be.false;
+        testArray1.endsWith([2, "foo", 2, "foo"]).should.be.false;
+    });
+});

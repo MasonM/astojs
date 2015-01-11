@@ -405,6 +405,8 @@ DoToken           = "do"            !IdentifierPart
 UndefinedToken    = "undefined"     !IdentifierPart
 DivToken          = "div"           !IdentifierPart
 ModToken          = "mod"           !IdentifierPart
+StartsWithToken   = ("start with" / "starts with" / "begin with" / "begins with") !IdentifierPart
+EndsWithToken     = ("end with" / "ends with") !IdentifierPart
 
 __
   = (WhiteSpace / LineTerminatorSequence / Comment / TheToken)*
@@ -642,8 +644,8 @@ EqualityOperator
   / "!="
 
 RelationalExpression
-  = first:InExpression
-    rest:(__ RelationalOperator __ InExpression)*
+  = first:StartsWithExpression
+    rest:(__ RelationalOperator __ StartsWithExpression)*
     { return buildBinaryExpression(first, rest); }
 
 RelationalOperator
@@ -651,6 +653,22 @@ RelationalOperator
   / ">="
   / $("<" !"<")
   / $(">" !">")
+
+StartsWithExpression
+  = left:EndsWithExpression
+    rest:(__ StartsWithToken __ EndsWithExpression)* {
+      return buildTree(left, rest, function(result, element) {
+        return insertLocationData(new ast.StartsWithExpression(result, element[3]), text(), line(), column());
+      });
+    }
+
+EndsWithExpression
+  = left:InExpression
+    rest:(__ EndsWithToken __ InExpression)* {
+      return buildTree(left, rest, function(result, element) {
+        return insertLocationData(new ast.EndsWithExpression(result, element[3]), text(), line(), column());
+      });
+    }
 
 InExpression
   = left:NullCoalescingExpression

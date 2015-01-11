@@ -1,6 +1,30 @@
 // astojs standard library
 "use strict";
 
+Array.prototype.startsWith = function(arg) {
+    if (!Array.isArray(arg)) return this[0] === arg;
+    if (arg.length > this.length) return false;
+    for (var i = 0; i < Math.min(this.length, arg.length); i++) {
+        if (this[i] !== arg[i]) return false;
+    }
+    return true;
+}
+
+Array.prototype.endsWith = function(arg) {
+    if (!Array.isArray(arg)) return this[this.length - 1] === arg;
+    if (arg.length > this.length) return false;
+    var startingIndex = this.length - arg.length;
+    for (var i = startingIndex; i < this.length; i++) {
+        if (this[i] !== arg[i - startingIndex]) return false;
+    }
+    return true;
+}
+
+// polyfill
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function(str) { return this.indexOf(str) === 0; };
+}
+
 function Record(items) {
     this.class = 'record';
     this.setFromObject(items);

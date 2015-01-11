@@ -53,6 +53,12 @@ describe('logical expressions:', function () {
     it('negation',    generateTest('not a', '!a;'));
 });
 
+describe('containment expressions:', function () {
+    it('starts with', generateTest('a starts with "foo"', 'a.startsWith("foo");'));
+    it('begin with', generateTest('a begin with "foo"', 'a.startsWith("foo");'));
+    it('ends with', generateTest('a ends with "foo"', 'a.endsWith("foo");'));
+});
+
 describe('concatenation:', function () {
     it('two strings literals', generateTest('"foo" & "bar"', '"foo"+"bar";'));
     it('one string, one variable', generateTest('a & "bar"', 'a.concat("bar");'));
