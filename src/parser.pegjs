@@ -591,8 +591,7 @@ AssignmentExpression
     } 
   
 AssignmentOperator
-  = "=" !"=" { return "=" }
-  / "*="
+  = "*="
   / "/="
   / "%="
   / "+="
@@ -640,8 +639,24 @@ EqualityExpression
     { return buildBinaryExpression(first, rest); }
     
 EqualityOperator
-  = "=="
+  = "="
   / "!="
+  / "≠"
+  / "equals"
+  / "equal to"
+  / "equal"
+  / "is equal to"
+  / "is equal"
+  / "does not equal"
+  / "doesn't equal"
+  / "is not equal to"
+  / "is not equal"  
+  / "is not"
+  / "isn't equal to"
+  / "isn't equal"
+  / "isn't"
+  / "doesn't equal"
+  / "does not equal"
 
 RelationalExpression
   = first:StartsWithExpression
@@ -649,10 +664,42 @@ RelationalExpression
     { return buildBinaryExpression(first, rest); }
 
 RelationalOperator
-  = "<="
+  = $("<" !("<" / "="))
+  / $(">" !(">" / "="))
+  / "<="
+  / "≤"
   / ">="
-  / $("<" !"<")
-  / $(">" !">")
+  / "≥"
+  / "comes before"
+  / "comes after"
+  / "is less than or equal to"
+  / "is less than or equal"
+  / "is less than"
+  / "is not greater than or equal to"
+  / "is not greater than or equal"
+  / "isn't greater than or equal to"
+  / "isn't greater than or equal"
+  / "greater than or equal to"
+  / "greater than or equal"
+  / "greater than"
+  / "is greater than or equal to"
+  / "is greater than or equal"
+  / "is greater than"
+  / "is not less than or equal to"
+  / "is not less than or equal"
+  / "isn't less than or equal to"
+  / "isn't less than or equal"
+  / "does not come after"
+  / "doesn't come after"
+  / "is not greater than"
+  / "isn't greater than"
+  / "less than or equal to"
+  / "less than or equal"
+  / "does not come before"
+  / "doesn't come before"
+  / "is not less than"
+  / "isn't less than"
+  / "less than"
 
 StartsWithExpression
   = left:EndsWithExpression
@@ -799,7 +846,7 @@ ThisExpression
     }
   
 Expression
-  = expression:AssignmentExpression {
+  = expression:ConditionalExpression {
       return expression;
     }
       

@@ -53,6 +53,54 @@ describe('logical expressions:', function () {
     it('negation',    generateTest('not a', '!a;'));
 });
 
+describe('comparison expressions:', function () {
+    it('=', generateTest('a = b', 'a===b;'));
+    it('equal', generateTest('a equal b', 'a===b;'));
+    it('equals', generateTest('a equals b', 'a===b;'));
+    it('equal to', generateTest('a equal to b', 'a===b;'));
+    it('is equal to', generateTest('a is equal to b', 'a===b;'));
+
+    it('≠', generateTest('a ≠ b', 'a!==b;'));
+    it('is not', generateTest('a is not b', 'a!==b;'));
+    it('isn\'t', generateTest('a isn\'t b', 'a!==b;'));
+    it('isn\'t equal to', generateTest('a isn\'t equal to b', 'a!==b;'));
+    it('is not equal to', generateTest('a is not equal to b', 'a!==b;'));
+    it('doesn\'t equal', generateTest('a doesn\'t equal b', 'a!==b;'));
+    it('does not equal', generateTest('a does not equal b', 'a!==b;'));
+
+    it('<', generateTest('a < b', 'a<b;'));
+    it('comes before', generateTest('a comes before b', 'a<b;'));
+    it('less than', generateTest('a less than b', 'a<b;'));
+    it('is less than', generateTest('a is less than b', 'a<b;'));
+    it('is not greater than or equal to', generateTest('a is not greater than or equal to b', 'a<b;'));
+    it('isn\'t greater than or equal to', generateTest('a isn\'t greater than or equal to b', 'a<b;'));
+
+    it('>', generateTest('a > b', 'a>b;'));
+    it('comes after', generateTest('a comes after b', 'a>b;'));
+    it('greater than', generateTest('a greater than b', 'a>b;'));
+    it('is greater than', generateTest('a is greater than b', 'a>b;'));
+    it('is not less than or equal to', generateTest('a is not less than or equal to b', 'a>b;'));
+    it('isn\'t less than or equal to', generateTest('a isn\'t less than or equal to b', 'a>b;'));
+
+    it('<=', generateTest('a <= b', 'a<=b;'));
+    it('≤', generateTest('a ≤ b', 'a<=b;'));
+    it('does not come after', generateTest('a does not come after b', 'a<=b;'));
+    it('doesn\'t come after', generateTest('a doesn\'t come after b', 'a<=b;'));
+    it('is less than or equal to', generateTest('a is less than or equal to b', 'a<=b;'));
+    it('is not greater than', generateTest('a is not greater than b', 'a<=b;'));
+    it('isn\'t greater than', generateTest('a isn\'t greater than b', 'a<=b;'));
+    it('less than or equal to', generateTest('a less than or equal to b', 'a<=b;'));
+
+    it('>=', generateTest('a >= b', 'a>=b;'));
+    it('≥', generateTest('a ≥ b', 'a>=b;'));
+    it('does not come before', generateTest('a does not come before b', 'a>=b;'));
+    it('doesn\'t come before', generateTest('a doesn\'t come before b', 'a>=b;'));
+    it('is greater than or equal to', generateTest('a is greater than or equal to b', 'a>=b;'));
+    it('is not less than', generateTest('a is not less than b', 'a>=b;'));
+    it('isn\'t less than', generateTest('a isn\'t less than b', 'a>=b;'));
+    it('greater than or equal to', generateTest('a greater than or equal to b', 'a>=b;'));
+});
+
 describe('containment expressions:', function () {
     it('starts with', generateTest('a starts with "foo"', 'a.startsWith("foo");'));
     it('begin with', generateTest('a begin with "foo"', 'a.startsWith("foo");'));

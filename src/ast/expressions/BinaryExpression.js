@@ -30,6 +30,64 @@ BinaryExpression.prototype.codegen = function () {
         case "mod":
             this.operator = "%";
             break;
+        case "comes before":
+        case "less than":
+        case "is less than":
+        case "is not greater than or equal":
+        case "is not greater than or equal to":
+        case "isn't greater than or equal":
+        case "isn't greater than or equal to":
+            this.operator = "<";
+            break;
+        case "comes after":
+        case "greater than":
+        case "is greater than":
+        case "is not less than or equal":
+        case "is not less than or equal to":
+        case "isn't less than or equal":
+        case "isn't less than or equal to":
+            this.operator = ">";
+            break;
+        case "≤":
+        case "does not come after":
+        case "doesn't come after":
+        case "is less than or equal to":
+        case "is less than or equal":
+        case "is not greater than":
+        case "isn't greater than":
+        case "less than or equal to":
+        case "less than or equal":
+            this.operator = "<=";
+            break;
+        case "≥":
+        case "does not come before":
+        case "doesn't come before":
+        case "greater than or equal to":
+        case "greater than or equal":
+        case "is greater than or equal to":
+        case "is greater than or equal":
+        case "is not less than":
+        case "isn't less than":
+            this.operator = ">=";
+            break;
+        case "=":
+        case "equals":
+        case "equal to":
+        case "equal":
+        case "is equal to":
+        case "is equal":
+            this.operator = "===";
+            break;
+        case "≠":
+        case "is not":
+        case "is not equal to":
+        case "isn't":
+        case "isn't equal to":
+        case "isn't equal":
+        case "doesn't equal":
+        case "does not equal":
+            this.operator = "!==";
+            break;
         case "^":
             this.type = 'CallExpression';
             this.callee = {
