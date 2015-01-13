@@ -7,7 +7,7 @@ var nodes = [
     'expressions/BinaryExpression',
     'expressions/EndsWithExpression',
     'expressions/LogicalExpression',
-    'expressions/ObjectExpression',
+    'expressions/RecordExpression',
     'expressions/StartsWithExpression',
     'expressions/UnaryExpression',
     'statements/BlockStatement',

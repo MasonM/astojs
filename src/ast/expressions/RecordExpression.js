@@ -1,18 +1,18 @@
 var Node = module.require("../Node").Node,
     _ = require('underscore');
 
-function ObjectExpression(properties) {
+function RecordExpression(properties) {
     Node.call(this);
-    this.type = "ObjectExpression";
+    this.type = "RecordExpression";
     this.properties = properties;
 
     var self = this;
     _(properties).each(function(property) { property.parent = self; });
 }
 
-ObjectExpression.prototype = Object.create(Node);
+RecordExpression.prototype = Object.create(Node);
 
-ObjectExpression.prototype.codegen = function () {
+RecordExpression.prototype.codegen = function () {
     if (!Node.prototype.codegen.call(this)) return;
     this.type = 'NewExpression';
     this.callee = {
@@ -29,4 +29,4 @@ ObjectExpression.prototype.codegen = function () {
     return this;
 };
 
-exports.ObjectExpression = ObjectExpression;
+exports.RecordExpression = RecordExpression;

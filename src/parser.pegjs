@@ -845,7 +845,7 @@ PrimaryExpression
   / Identifier
   / Literal
   / ArrayLiteral
-  / ObjectLiteral
+  / RecordLiteral
   / "(" __ expression:Expression __ ")" { return expression; }
 
 ThisExpression
@@ -890,25 +890,25 @@ PatternElement
   = Identifier
   / ArrayPattern
 
-ObjectLiteral
-  = "{" __ properties:PropertyNameAndValueList __ "}" {
-       return insertLocationData(new ast.ObjectExpression(properties), text(), line(), column());
+RecordLiteral
+  = "{" __ properties:RecordPropertyNameAndValueList __ "}" {
+       return insertLocationData(new ast.RecordExpression(properties), text(), line(), column());
      }
-  / "{" __ properties:PropertyNameAndValueList __ "," __ "}" {
-       return insertLocationData(new ast.ObjectExpression(properties), text(), line(), column());
+  / "{" __ properties:RecordPropertyNameAndValueList __ "," __ "}" {
+       return insertLocationData(new ast.RecordExpression(properties), text(), line(), column());
      }
      
-PropertyNameAndValueList
-  = first:PropertyAssignment rest:(__ "," __ PropertyAssignment)* {
+RecordPropertyNameAndValueList
+  = first:RecordPropertyAssignment rest:(__ "," __ RecordPropertyAssignment)* {
       return buildList(first, rest, 3);
     }
 
-PropertyAssignment
-  = key:PropertyName __ ":" __ value:AssignmentExpression {
+RecordPropertyAssignment
+  = key:RecordPropertyName __ ":" __ value:AssignmentExpression {
       return insertLocationData(new ast.RecordProperty(key, value, false, false), text(), line(), column());
     }
 
-PropertyName
+RecordPropertyName
   = IdentifierName
   / StringLiteral
   / NumericLiteral
