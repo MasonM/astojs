@@ -20,7 +20,29 @@ Array.prototype.endsWith = function(arg) {
     return true;
 }
 
-// polyfill
+Array.prototype.contains = function(searchElement) {
+    var isSearchElementAnArray = Array.isArray(searchElement);
+    var j = 0, maxSublistMatchCount = 0;
+    for (var i = 0; i < this.length; i++) {
+        if (isSearchElementAnArray) {
+            if (searchElement[j] === this[i]) {
+                j++;
+                if (j > maxSublistMatchCount) maxSublistMatchCount = j;
+            } else {
+                j = 0;
+            }
+        } else if (searchElement === this[i]) {
+            return true;
+        }
+    }
+    return isSearchElementAnArray ? maxSublistMatchCount === searchElement.length : false;
+}
+
+String.prototype.contains = function() {
+    return String.prototype.indexOf.apply(this, arguments) !== -1;
+}
+
+// polyfill: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
 if (typeof String.prototype.startsWith != 'function') {
   String.prototype.startsWith = function(str) { return this.indexOf(str) === 0; };
 }
@@ -62,6 +84,20 @@ Record.prototype.equals = function(other) {
         }
     }
 
+    return true;
+}
+
+Record.prototype.contains = function(other) {
+    if (!other instanceof Record) {
+        throw new TypeError('Called Record.contains() with a non-record');
+    }
+    var otherProps = Object.getOwnPropertyNames(other);
+    for (var i = 0; i < otherProps.length; i++) {
+        var propName = otherProps[i];
+        if (!this.hasOwnProperty(propName) || this[propName] !== other[propName]) {
+            return false;
+        }
+    }
     return true;
 }
 

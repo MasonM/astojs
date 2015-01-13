@@ -700,6 +700,14 @@ RelationalOperator
   / "is not less than"
   / "isn't less than"
   / "less than"
+  / "contains"
+  / "does not contain"
+  / "doesn't contain"
+  / "is in"
+  / "is contained by"
+  / "is not in"
+  / "is not contained by"
+  / "isn't contained by"
 
 StartsWithExpression
   = left:EndsWithExpression

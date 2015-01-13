@@ -88,6 +88,76 @@ BinaryExpression.prototype.codegen = function () {
         case "does not equal":
             this.operator = "!==";
             break;
+        case "contains":
+            this.type = 'CallExpression';
+            this.callee = {
+                "type": "MemberExpression",
+                "computed": false,
+                "object": this.left,
+                "property": {
+                    "type": "Identifier",
+                    "name": "contains"
+                }
+            };
+            Object.defineProperty(this, 'arguments', {
+                value: [ this.right ]
+            });
+            break;
+        case "is in":
+        case "is contained by":
+            this.type = 'CallExpression';
+            this.callee = {
+                "type": "MemberExpression",
+                "computed": false,
+                "object": this.right,
+                "property": {
+                    "type": "Identifier",
+                    "name": "contains"
+                }
+            };
+            Object.defineProperty(this, 'arguments', {
+                value: [ this.left ]
+            });
+            break;
+        case "does not contain":
+        case "doesn't contain":
+            this.type = "UnaryExpression";
+            this.operator = "!";
+            this.prefix = true;
+            this.argument = {
+                "type": "CallExpression",
+                "callee": {
+                    "type": "MemberExpression",
+                    "computed": false,
+                    "object": this.left,
+                    "property": {
+                        "type": "Identifier",
+                        "name": "contains",
+                    }
+                },
+                "arguments": [this.right]
+            };
+            break; 
+        case "is not in":
+        case "is not contained by":
+        case "isn't contained by":
+            this.type = "UnaryExpression";
+            this.operator = "!";
+            this.prefix = true;
+            this.argument = {
+                "type": "CallExpression",
+                "callee": {
+                    "type": "MemberExpression",
+                    "computed": false,
+                    "object": this.right,
+                    "property": {
+                        "type": "Identifier",
+                        "name": "contains",
+                    }
+                },
+                "arguments": [this.left]
+            };
+            break; 
         case "^":
             this.type = 'CallExpression';
             this.callee = {

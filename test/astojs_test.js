@@ -105,6 +105,16 @@ describe('containment expressions:', function () {
     it('starts with', generateTest('a starts with "foo"', 'a.startsWith("foo");'));
     it('begin with', generateTest('a begin with "foo"', 'a.startsWith("foo");'));
     it('ends with', generateTest('a ends with "foo"', 'a.endsWith("foo");'));
+
+    it('contains', generateTest('a contains "foo"', 'a.contains("foo");'));
+    it('is in', generateTest('a is in "foo"', '"foo".contains(a);'));
+    it('is contained by', generateTest('a is contained by "foo"', '"foo".contains(a);'));
+
+    it('does not contain', generateTest('a does not contain "foo"', '!a.contains("foo");'));
+    it('doesn\'t contain', generateTest('a doesn\'t contain "foo"', '!a.contains("foo");'));
+    it('is not in', generateTest('a is not in "foo"', '!"foo".contains(a);'));
+    it('is not contained by', generateTest('a is not contained by "foo"', '!"foo".contains(a);'));
+    it('isn\'t contained by', generateTest('a isn\'t contained by "foo"', '!"foo".contains(a);'));
 });
 
 describe('concatenation:', function () {
