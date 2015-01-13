@@ -1,6 +1,6 @@
 var Node = module.require("./Node").Node;
 
-function Property(key, value, shorthand, method) {
+function RecordProperty(key, value, shorthand, method) {
     Node.call(this);
     this.type = "Property";
     this.kind = 'init';
@@ -15,13 +15,13 @@ function Property(key, value, shorthand, method) {
     this.value.parent = this;
 }
 
-Property.prototype = Object.create(Node);
+RecordProperty.prototype = Object.create(Node);
 
-Property.prototype.codegen = function() {
+RecordProperty.prototype.codegen = function() {
     if (!Node.prototype.codegen.call(this)) return;
     this.key = this.key.codegen(false);
     this.value = this.value.codegen(this.parent.type != "ObjectPattern");
     return this;
 };
 
-exports.Property = Property;
+exports.RecordProperty = RecordProperty;

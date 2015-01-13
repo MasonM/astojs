@@ -867,15 +867,8 @@ ArrayLiteral
     }
 
 ElementList
-  = first:(
-      elision:(Elision __)? element:AssignmentExpression {
-        return optionalList(extractOptional(elision, 0)).concat(element);
-      }
-    )
-    rest:(
-      __ "," __ elision:(Elision __)? element:AssignmentExpression {
-        return optionalList(extractOptional(elision, 0)).concat(element);
-      }
+  = first:AssignmentExpression rest:(
+      __ "," __ element:AssignmentExpression { return element; }
     )*
     { return Array.prototype.concat.apply(first, rest); }
     
@@ -888,24 +881,14 @@ ArrayPattern
     }
 
 PatternElementList
-  = first:(
-      elision:(Elision __)? element:PatternElement {
-        return optionalList(extractOptional(elision, 0)).concat(element);
-      }
-    )
-    rest:(
-      __ "," __ elision:(Elision __)? element:PatternElement {
-        return optionalList(extractOptional(elision, 0)).concat(element);
-      }
+  = first:PatternElement rest:(
+      __ "," __ element:PatternElement { return element; }
     )*
     { return Array.prototype.concat.apply(first, rest); }
 
 PatternElement
   = Identifier
   / ArrayPattern
-  
-Elision
-  = "," commas:(__ ",")* { return filledArray(commas.length + 1, null); }
 
 ObjectLiteral
   = "{" __ properties:PropertyNameAndValueList __ "}" {
@@ -922,52 +905,13 @@ PropertyNameAndValueList
 
 PropertyAssignment
   = key:PropertyName __ ":" __ value:AssignmentExpression {
-      return insertLocationData(new ast.Property(key, value, false, false), text(), line(), column());
+      return insertLocationData(new ast.RecordProperty(key, value, false, false), text(), line(), column());
     }
-  / key:PropertyName __ 
-    "(" __ params:(ParameterList __)? ")"
-    __ body:Block __
-    {
-      return insertLocationData(new ast.Property(key, new ast.FunctionExpression(
-        null, 
-        optionalList(extractOptional(params, 0)),
-        body,
-        null
-      ), false, true), text(), line(), column());
-    }    
-  / key:IdentifierName {
-    return insertLocationData(new ast.Property(key, key, true, false), text(), line(), column());
-  }
 
 PropertyName
   = IdentifierName
   / StringLiteral
   / NumericLiteral
-  
-ObjectPattern
-  = "{" __ properties:PatternPropertyNameAndValueList __ "}" {
-       return insertLocationData(new ast.ObjectPattern(properties), text(), line(), column());
-     }
-  / "{" __ properties:PatternPropertyNameAndValueList __ "," __ "}" {
-       return insertLocationData(new ast.ObjectPattern(properties), text(), line(), column());
-     }
-     
-PatternPropertyNameAndValueList
-  = first:PatternPropertyAssignment rest:(__ "," __ PatternPropertyAssignment)* {
-      return buildList(first, rest, 3);
-    }
-
-PatternPropertyAssignment
-  = key:IdentifierName __ ":" __ value:IdentifierName {
-      return insertLocationData(new ast.Property(key, value, false, false), text(), line(), column());
-    }
-  / key:IdentifierName __ ":" __ value:ObjectPattern {
-      return insertLocationData(new ast.Property(key, value, false, false), text(), line(), column());
-    }
-  / key:IdentifierName {
-    return insertLocationData(new ast.Property(key, key, true, false), text(), line(), column());
-  }    
 
 Pattern
-  = ObjectPattern
-  / ArrayPattern
+  = ArrayPattern

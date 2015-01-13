@@ -1,7 +1,7 @@
 var nodes = [
     'Parameter',
     'Program',
-    'Property',
+    'RecordProperty',
     'VariableDeclarator',
     'expressions/ArrayExpression',
     'expressions/BinaryExpression',
