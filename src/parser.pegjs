@@ -209,14 +209,13 @@ Keyword
   / OrToken
   / "out of"
   / "over"
-  / "prop"
-  / "property"
+  / PropertyToken
   / "put"
   / "ref"
   / "reference"
   / RepeatToken
   / ReturnToken
-  / "script"
+  / ScriptToken
   / "second"
   / SetToken
   / "seventh"
@@ -407,7 +406,8 @@ DivToken          = "div"           !IdentifierPart
 ModToken          = "mod"           !IdentifierPart
 StartsWithToken   = ("start with" / "starts with" / "begin with" / "begins with") !IdentifierPart
 EndsWithToken     = ("end with" / "ends with") !IdentifierPart
-
+PropertyToken     = ("property" / "prop") !IdentifierPart
+ScriptToken       = "script"
 __
   = (WhiteSpace / LineTerminatorSequence / Comment / TheToken)*
 
@@ -432,6 +432,7 @@ StatementList
 
 Statement
   = VariableStatement
+  / ScriptDeclaration
   / FunctionDeclaration
   / IfStatement
   / ReturnStatement
@@ -492,6 +493,27 @@ Parameter
     return insertLocationData(new ast.Parameter(null, id), text(), line(), column());
   }
   
+ScriptDeclaration
+  = ScriptToken __ id:Identifier
+    __ properties:ScriptPropertyList? __
+    __ handlers:FunctionDeclaration* __
+    __ statements:Block __ 
+    EndToken _ ScriptToken?
+    {
+      return insertLocationData(
+        new ast.ScriptDeclarationStatement(id, optionalList(properties), optionalList(handlers), optionalList(statements)),
+        text(), line(), column()
+      );
+    }
+
+ScriptPropertyList
+  = first:ScriptProperty rest:(__ ScriptProperty)* { return buildList(first, rest, 1); }
+
+ScriptProperty
+  = PropertyToken __ label:Identifier __ ":" __ initialValue:Expression __ {
+      return insertLocationData(new ast.ScriptProperty(label, initialValue), text(), line(), column());
+  }
+
 IfStatement
   = IfToken __ test:Expression __ ThenToken? __
     consequent:Block __

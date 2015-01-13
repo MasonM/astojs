@@ -181,3 +181,10 @@ describe('subroutines:', function () {
         "end if\n" + 
     "end minimumValue", 'function minimumValue(x,y){if(x<y){return x;}else{return y;}}'));
 });
+
+describe('script objects:', function () {
+    it('minimal script object', generateTest('script helloWorld end script', 'function helloWorld(){}'));
+    it('script object with a property', generateTest("script helloWorld \n"+
+        "property foo : \"bar\"\n" +
+    "end script", 'function helloWorld(){let foo="bar";}'));
+});
