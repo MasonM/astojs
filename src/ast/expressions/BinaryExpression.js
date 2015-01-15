@@ -23,9 +23,32 @@ BinaryExpression.prototype.codegen = function () {
     this.left = this.left.codegen();
     this.right = this.right.codegen();
     switch (this.operator) {
-        case "div": //intentional fall-through
         case "÷":
             this.operator = '/';
+            break;
+        case "div":
+            this.type = 'CallExpression';
+            this.callee = {
+                "type": "MemberExpression",
+                "computed": false,
+                "object": {
+                    "type": "Identifier",
+                    "name": "Math"
+                },
+                "property": {
+                    "type": "Identifier",
+                    "name": "floor"
+                }
+            };
+            Object.defineProperty(this, 'arguments', {
+                value: [{
+                    "type": "BinaryExpression",
+                    "operator": "/",
+                    "left": this.left,
+                    "right": this.right
+                }],
+                enumerable: true
+            });
             break;
         case "mod":
             this.operator = "%";

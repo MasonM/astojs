@@ -467,7 +467,7 @@ VariableDeclaration
     }
 
 Initialiser
-  = ToToken __ expression:AssignmentExpression { return expression; }
+  = ToToken __ expression:Expression { return expression; }
   
 FunctionDeclaration
   = (OnToken / ToToken) __ id:Identifier __
@@ -594,51 +594,6 @@ UseIdentifier
     return id.asPredefinedCollection();
   }
 
-AssignmentExpression
-  = left:Pattern __ "=" !"=" __ right:AssignmentExpression {
-      return insertLocationData(new ast.AssignmentExpression(
-        left, "=", right), text(), line(), column()); 
-  }
-  / left:ConditionalExpression 
-    assignment:(__ operator:AssignmentOperator __
-    right:AssignmentExpression)? { 
-      if (!assignment) {
-        return left;
-      }
-      
-      return insertLocationData(new ast.AssignmentExpression(
-        left, 
-        extractOptional(assignment, 1), 
-        extractOptional(assignment, 3)), text(), line(), column()); 
-    } 
-  
-AssignmentOperator
-  = "*="
-  / "/="
-  / "%="
-  / "+="
-  / "-="
-  / "<<="
-  / ">>="
-  / ">>>="
-  / "&="
-  / "^="
-  / "|="
-
-ConditionalExpression
-  = consequent:LogicalORExpression __
-    condition:(IfToken __ LogicalORExpression __
-    ElseToken __ LogicalORExpression)? {
-      if (condition) {
-        var test = extractOptional(condition, 2);
-        var alternate = extractOptional(condition, 6);
-        
-        return insertLocationData(new ast.ConditionalExpression(test, consequent, alternate), text(), line(), column()); 
-      } else {
-        return consequent;
-      }
-    }
-    
 LogicalORExpression
   = first:LogicalANDExpression
     rest:(__ LogicalOROperator __ LogicalANDExpression)*
@@ -663,12 +618,12 @@ EqualityExpression
 EqualityOperator
   = "="
   / "!="
-  / "≠"
   / "equals"
   / "equal to"
   / "equal"
   / "is equal to"
   / "is equal"
+  / "≠"
   / "does not equal"
   / "doesn't equal"
   / "is not equal to"
@@ -686,8 +641,8 @@ RelationalExpression
     { return buildBinaryExpression(first, rest); }
 
 RelationalOperator
-  = $("<" !("<" / "="))
-  / $(">" !(">" / "="))
+  = $("<" !"=")
+  / $(">" !"=")
   / "<="
   / "≤"
   / ">="
@@ -740,36 +695,12 @@ StartsWithExpression
     }
 
 EndsWithExpression
-  = left:InExpression
-    rest:(__ EndsWithToken __ InExpression)* {
+  = left:ConcatenativeExpression
+    rest:(__ EndsWithToken __ ConcatenativeExpression)* {
       return buildTree(left, rest, function(result, element) {
         return insertLocationData(new ast.EndsWithExpression(result, element[3]), text(), line(), column());
       });
     }
-
-InExpression
-  = left:NullCoalescingExpression
-    right:(__ InToken __ NullCoalescingExpression)? {
-      if (!right) {
-        return left;
-      }
-      return insertLocationData(new ast.InExpression(left, extractOptional(right, 3)), text(), line(), column());
-    }
-    
-NullCoalescingExpression
-  = first:ShiftExpression
-    rest:(__ "??" __ ShiftExpression)*
-    { return buildNullCoalescingExpression(first, rest); }
-    
-ShiftExpression
-  = first:ConcatenativeExpression
-    rest:(__ ShiftOperator __ ConcatenativeExpression)*
-    { return buildBinaryExpression(first, rest); }
-
-ShiftOperator
-  = $("<<"  !"=")
-  / $(">>>" !"=")
-  / $(">>"  !"=")
 
 ConcatenativeExpression
   = first:AdditiveExpression
@@ -785,8 +716,8 @@ AdditiveExpression
     { return buildBinaryExpression(first, rest); }
     
 AdditiveOperator
-  = $("+" ![+=])
-  / $("-" ![-=])  
+  = "+"
+  / "-"
 
 MultiplicativeExpression
   = first:ExponentiativeExpression
@@ -794,10 +725,10 @@ MultiplicativeExpression
     { return buildBinaryExpression(first, rest); }
 
 MultiplicativeOperator
-  = $("*" ![*=])
-  / $("/" !"=")
-  / $("÷" !"=")
-  / $("^" !"=")
+  = $("*" !"*")
+  / "/"
+  / "÷"
+  / "^"
   / $ModToken
   / $DivToken
 
@@ -807,61 +738,19 @@ ExponentiativeExpression
     { return buildBinaryExpression(first, rest); }
 
 ExponentiativeOperator
-  = $("**" !"=")
+  = "**"
   
 UnaryExpression
-  = operator:UnaryOperator __ argument:PostfixExpression {
-      if (operator === "++" || operator === "--") {
-        return insertLocationData(new ast.UpdateExpression(argument, operator, true), text(), line(), column());
-      } else {
-        return insertLocationData(new ast.UnaryExpression(operator, argument), text(), line(), column());
-      }
+  = operator:UnaryOperator __ argument:PrimaryExpression {
+      return insertLocationData(new ast.UnaryExpression(operator, argument), text(), line(), column());
     }
-  / PostfixExpression
+  / PrimaryExpression
 
 UnaryOperator
   = $NotToken { return "!" }
-  / "<-"
-  / "++"
-  / "--"
-  / $("+" !"=")
-  / $("-" !"=")
-  / "!"
-  
-PostfixExpression
-  = argument:GlobalIdentifierExpression _ operator:PostfixOperator? {
-      if (operator) {
-        return insertLocationData(new ast.UpdateExpression(argument, operator, false), text(), line(), column());
-      } else {
-        return argument;
-      }
-    }
+  / "+"
+  / "-"
 
-PostfixOperator
-  = "++"
-  / "--"
-    
-Arguments
-  = "(" __ args:(ArgumentList __)? ")" {
-      return optionalList(extractOptional(args, 0));
-    }
-    
-ArgumentList
-  = first:Argument rest:(__ "," __ Argument)* {
-      return buildList(first, rest, 3);
-    }
-    
-Argument
-  = expression:AssignmentExpression __ "..." {
-    return insertLocationData(new ast.SplatExpression(expression), text(), line(), column()); 
-  }
-  / AssignmentExpression
-
-GlobalIdentifierExpression
-  = "::" __ id:Identifier
-    { return id.asGlobal(); }
-  / PrimaryExpression
-  
 PrimaryExpression
   = ThisExpression
   / Identifier
@@ -876,9 +765,7 @@ ThisExpression
     }
   
 Expression
-  = expression:ConditionalExpression {
-      return expression;
-    }
+  = LogicalORExpression
       
 ArrayLiteral
   = "{" __ "}" { 
@@ -889,8 +776,8 @@ ArrayLiteral
     }
 
 ElementList
-  = first:AssignmentExpression rest:(
-      __ "," __ element:AssignmentExpression { return element; }
+  = first:Expression rest:(
+      __ "," __ element:Expression { return element; }
     )*
     { return Array.prototype.concat.apply(first, rest); }
     
@@ -926,7 +813,7 @@ RecordPropertyNameAndValueList
     }
 
 RecordPropertyAssignment
-  = key:RecordPropertyName __ ":" __ value:AssignmentExpression {
+  = key:RecordPropertyName __ ":" __ value:Expression {
       return insertLocationData(new ast.RecordProperty(key, value, false, false), text(), line(), column());
     }
 

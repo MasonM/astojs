@@ -41,8 +41,8 @@ describe('arithmetic expressions:', function () {
     it('add',             generateTest('2 + 4', '2+4;'));
     it('subtract',        generateTest('2 - 4', '2-4;'));
     it('divide with /',   generateTest('2 / 4', '2/4;'));
-    it('divide with div', generateTest('2 div 4', '2/4;'));
     it('divide with ÷',   generateTest('2 ÷ 4', '2/4;'));
+    it('integer divide',  generateTest('2 div 4', 'Math.floor(2/4);'));
     it('modulo',          generateTest('2 mod 4', '2%4;'));
     it('exponentiation',  generateTest('2^4', 'Math.pow(2,4);'));
 });
