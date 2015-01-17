@@ -50,13 +50,7 @@
       return insertLocationData(new ast.LogicalExpression(result, element[1], element[3]), text(), line(), column());
     });
   }
-  
-  function buildNullCoalescingExpression(first, rest) {
-    return buildTree(first, rest, function(result, element) {
-      return insertLocationData(new ast.NullCoalescingExpression(result, element[3]), text(), line(), column());
-    });
-  }
- 
+
   function optionalList(value) {
     return value !== null ? value : [];
   }
@@ -718,15 +712,31 @@ ExponentiativeOperator
   = "**"
   
 UnaryExpression
-  = operator:UnaryOperator __ argument:PrimaryExpression {
+  = operator:UnaryOperator __ argument:PositionalCallExpression {
       return insertLocationData(new ast.UnaryExpression(operator, argument), text(), line(), column());
     }
-  / PrimaryExpression
+  / PositionalCallExpression
 
 UnaryOperator
   = $NotToken { return "!" }
   / "+"
   / "-"
+
+PositionalCallExpression
+  = callee:Identifier args:Arguments {
+      return insertLocationData(new ast.PositionalCallExpression(callee, args), text(), line(), column());
+  }
+  / PrimaryExpression
+
+Arguments
+= "(" __ args:(ArgumentList __)? ")" {
+    return optionalList(extractOptional(args, 0));
+}
+
+ArgumentList
+= first:Expression rest:(__ "," __ Expression)* {
+    return buildList(first, rest, 3);
+}
 
 PrimaryExpression
   = ThisExpression

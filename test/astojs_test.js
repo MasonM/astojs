@@ -174,7 +174,7 @@ describe('repeat statement:', function () {
         generateTest('repeat with a in {1,2} b end', 'for(a in[1,2]){b;}'));
 });
 
-describe('subroutines:', function () {
+describe('positional subroutines:', function () {
     it('simple subroutine with no parameters', generateTest('on helloWorld() return a end', 'function helloWorld(){return a;}'));
     it('simple positional subroutine with a couple parameters', generateTest("on minimumValue(x, y) x end minimumValue", "function minimumValue(x,y){x;}"));
 
@@ -185,6 +185,9 @@ describe('subroutines:', function () {
         "   return y\n" +
         "end if\n" + 
     "end minimumValue", 'function minimumValue(x,y){if(x<y){return x;}else{return y;}}'));
+
+    it('call to subroutine with no parameters', generateTest('helloWorld()', 'helloWorld();'));
+    it('call to subroutine with several parameters', generateTest('helloWorld(foo, 2+2, "bar")', 'helloWorld(foo,2+2,"bar");'));
 });
 
 describe('script objects:', function () {
