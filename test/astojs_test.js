@@ -176,6 +176,7 @@ describe('repeat statement:', function () {
 
 describe('positional subroutines:', function () {
     it('simple subroutine with no parameters', generateTest('on helloWorld() return a end', 'function helloWorld(){return a;}'));
+    it('simple subroutine with one parameters', generateTest('on helloWorld(a) return a end', 'function helloWorld(a){return a;}'));
     it('simple positional subroutine with a couple parameters', generateTest("on minimumValue(x, y) x end minimumValue", "function minimumValue(x,y){x;}"));
 
     it('complex positional subroutine with a couple parameters', generateTest("on minimumValue(x, y)\n"+
@@ -187,7 +188,17 @@ describe('positional subroutines:', function () {
     "end minimumValue", 'function minimumValue(x,y){if(x<y){return x;}else{return y;}}'));
 
     it('call to subroutine with no parameters', generateTest('helloWorld()', 'helloWorld();'));
+    it('call to subroutine with one parameter', generateTest('helloWorld (a)', 'helloWorld(a);'));
     it('call to subroutine with several parameters', generateTest('helloWorld(foo, 2+2, "bar")', 'helloWorld(foo,2+2,"bar");'));
+});
+
+describe('positional subroutines:', function () {
+    it('simple subroutine with one AS labelled parameter', generateTest("on rock around the clock\n"+
+        "return clock\n"+
+    "end", 'function rock(args){var clock=args["around"];return clock;}'));
+
+    it('simple subroutine with one direct parameter', generateTest("to findMininum of numList\nnumList\nend findMininum",
+        'function findMininum(args){var numList=args["of"];numList;}'));
 });
 
 describe('script objects:', function () {

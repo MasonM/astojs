@@ -179,7 +179,7 @@ Keyword
   / FromToken
   / "front"
   / "get"
-  / "given"
+  / GivenToken
   / "gloal"
   / IfToken
   / "ignoring"
@@ -382,8 +382,8 @@ WhileToken        = "while"         !IdentifierPart
 RepeatToken       = "repeat"        !IdentifierPart
 TimesToken        = "times"         !IdentifierPart
 UntilToken        = "until"         !IdentifierPart
-InToken           = "in"            !IdentifierPart
-OfToken           = "of"            !IdentifierPart
+InToken           = "in"
+OfToken           = "of"
 TryToken          = "try"           !IdentifierPart
 OnToken           = "on"            !IdentifierPart
 ToToken           = "to"            !IdentifierPart
@@ -403,11 +403,12 @@ StartsWithToken   = ("start with" / "starts with" / "begin with" / "begins with"
 EndsWithToken     = ("end with" / "ends with") !IdentifierPart
 PropertyToken     = ("property" / "prop") !IdentifierPart
 ScriptToken       = "script"
+GivenToken        = "given"         !IdentifierPart
 __
-  = (WhiteSpace / LineTerminatorSequence / Comment / TheToken)*
+  = (WhiteSpace / LineTerminatorSequence / Comment / TheToken / "¬")*
 
 _
-  = (WhiteSpace / MultiLineCommentNoLineTerminator / TheToken)*
+  = (WhiteSpace / MultiLineCommentNoLineTerminator / TheToken / "¬")*
   
 EOS
   = __ (LineTerminatorSequence / EOF)
@@ -457,7 +458,7 @@ VariableStatement
  
 FunctionDeclaration
   = (OnToken / ToToken) __ id:Identifier __
-    "(" __ params:(ParameterList __)? ")" __
+    "(" __ params:(PositionalParameterList __)? ")" __
     __ body:Block __ 
     EndToken _ Identifier?
     {
@@ -465,20 +466,74 @@ FunctionDeclaration
           new ast.SubroutinePositionalDeclarationStatement(id, optionalList(extractOptional(params, 0)), body), 
        text(), line(), column());
     }
-    
-ParameterList
-  = first:Parameter rest:(__ "," __ Parameter)* {
+  / (OnToken / ToToken) __ id:Identifier __
+    direct:DirectLabelledParameter? __
+    aslabelled:ASLabelledParameterList? __
+    userlabelled:(GivenToken UserLabelledParameterList)? __
+    body:Block __
+    EndToken _ Identifier?
+    {
+      return insertLocationData(
+        new ast.SubroutineLabelledDeclarationStatement(id, direct, aslabelled, optionalList(extractOptional(userlabelled, 1)), body),
+       text(), line(), column());
+    }
+
+PositionalParameterList
+  = first:Identifier rest:(__ "," __ Identifier)* {
       return buildList(first, rest, 3);
     }
-    
-Parameter
+
+DirectLabelledParameter
+  = label:(OfToken / InToken) __ id:Identifier {
+      return insertLocationData(new ast.LabelledParameter(label, id), text(), line(), column());
+  }
+
+ASLabelledParameterList
+  = first:ASLabelledParameter rest:(__ ASLabelledParameter)* {
+      return buildList(first, rest, 1);
+  }
+
+ASLabelledParameter
+  = label:ASLabel _ id:Identifier {
+      return insertLocationData(new ast.LabelledParameter(label, id), text(), line(), column());
+  }
+
+ASLabel
+  = "about"
+  / "above"
+  / "against"
+  / "apart from"
+  / "around"
+  / "aside from"
+  / "at"
+  / "below"
+  / "beneath"
+  / "beside"
+  / "between"
+  / "by"
+  / "for"
+  / "from"
+  / "instead of"
+  / "into"
+  / "onto"
+  / "on"
+  / "out of"
+  / "over"
+  / "since"
+  / "thru"
+  / "through"
+  / "under"
+  
+UserLabelledParameterList
+  = first:UserLabelledParameter rest:(__ "," __ UserLabelledParameter)* {
+      return buildList(first, rest, 3);
+    }
+
+UserLabelledParameter
   = label:Identifier __ ":" __ id:Identifier{
     return insertLocationData(new ast.Parameter(label, id), text(), line(), column());
   }
-  / id:Identifier {
-    return insertLocationData(new ast.Parameter(null, id), text(), line(), column());
-  }
-  
+
 ScriptDeclaration
   = ScriptToken __ id:Identifier
     __ properties:ScriptPropertyList? __
@@ -723,7 +778,7 @@ UnaryOperator
   / "-"
 
 PositionalCallExpression
-  = callee:Identifier args:Arguments {
+  = callee:Identifier _ args:Arguments {
       return insertLocationData(new ast.PositionalCallExpression(callee, args), text(), line(), column());
   }
   / PrimaryExpression

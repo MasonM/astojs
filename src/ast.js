@@ -1,5 +1,5 @@
 var nodes = [
-    'Parameter',
+    'LabelledParameter',
     'Program',
     'RecordProperty',
     'ScriptProperty',
@@ -21,6 +21,7 @@ var nodes = [
     'statements/RepeatUntilStatement',
     'statements/RepeatWhileStatement',
     'statements/ReturnStatement',
+    'statements/SubroutineLabelledDeclarationStatement',
     'statements/SubroutinePositionalDeclarationStatement',
     'statements/ScriptDeclarationStatement',
     'statements/VariableDeclarationStatement',

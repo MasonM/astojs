@@ -9,7 +9,7 @@ function VariableDeclarationStatement(id, init) {
     this.id.parent = this;
 
     this.init = init;
-    this.init.parent = this;
+    if (init) this.init.parent = this;
 }
 
 VariableDeclarationStatement.prototype = Object.create(Node);
@@ -17,7 +17,7 @@ VariableDeclarationStatement.prototype = Object.create(Node);
 VariableDeclarationStatement.prototype.codegen = function() {
     if (!Node.prototype.codegen.call(this)) return;
     this.id = this.id.codegen();
-    this.init = this.init.codegen();
+    if (this.init) this.init = this.init.codegen();
 
     this.declarations = [{
         "type": "VariableDeclarator",
