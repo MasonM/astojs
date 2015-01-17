@@ -137,6 +137,11 @@ describe('variable statement:', function () {
         generateTest('set a to true', 'var a=true;'));
     it('set variable with identifier value', 
         generateTest('set a to b', 'var a=b;'));
+
+    it('copy number literal to variable',
+        generateTest('copy 5 to a', 'var a=5;'));
+    it('copy identifier to variable', 
+        generateTest('copy a to b', 'var b=a;'));
 });
 
 describe('if statement:', function () {

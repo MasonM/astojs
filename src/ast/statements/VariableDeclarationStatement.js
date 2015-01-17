@@ -1,29 +1,29 @@
 var Node = module.require("../Node").Node,
     _ = require('underscore');
 
-function VariableDeclarationStatement(declarations) {
+function VariableDeclarationStatement(id, init) {
     Node.call(this);
     this.type = "VariableDeclaration";
     this.kind = "var";
-    this.declarations = declarations;
+    this.id = id;
+    this.id.parent = this;
 
-    var self = this;
-    _(declarations).each(function(d) {
-        d.parent = self;
-    });
+    this.init = init;
+    this.init.parent = this;
 }
 
 VariableDeclarationStatement.prototype = Object.create(Node);
 
 VariableDeclarationStatement.prototype.codegen = function() {
     if (!Node.prototype.codegen.call(this)) return;
+    this.id = this.id.codegen();
+    this.init = this.init.codegen();
 
-    for (var i = 0; i < this.declarations.length; i++) {
-        var statement = this.declarations[i].codegen();
-        if (statement) {
-            this.declarations[this.declarations.indexOf(statement)] = statement;
-        }
-    }
+    this.declarations = [{
+        "type": "VariableDeclarator",
+        "id": this.id,
+        "init": this.init
+    }];
     return this;
 };
 

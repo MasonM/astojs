@@ -166,7 +166,7 @@ Keyword
   / ByToken
   / "considering"
   / ContinueToken
-  / "copy"
+  / CopyToken
   / DivToken
   / "does"
   / "eighth"
@@ -404,6 +404,7 @@ DoToken           = "do"            !IdentifierPart
 UndefinedToken    = "undefined"     !IdentifierPart
 DivToken          = "div"           !IdentifierPart
 ModToken          = "mod"           !IdentifierPart
+CopyToken         = "copy"          !IdentifierPart
 StartsWithToken   = ("start with" / "starts with" / "begin with" / "begins with") !IdentifierPart
 EndsWithToken     = ("end with" / "ends with") !IdentifierPart
 PropertyToken     = ("property" / "prop") !IdentifierPart
@@ -436,7 +437,6 @@ Statement
   / FunctionDeclaration
   / IfStatement
   / ReturnStatement
-  / UseStatement
   / ThrowStatement
   / TryStatement
   / BreakStatement
@@ -454,21 +454,13 @@ Block
     }
     
 VariableStatement
-  = SetToken __ declaration:VariableDeclaration __ {
-      return insertLocationData(new ast.VariableDeclarationStatement([declaration]), text(), line(), column());
+  = SetToken __ id:Identifier __ ToToken __ init:Expression {
+      return insertLocationData(new ast.VariableDeclarationStatement(id, init), text(), line(), column());
     }
-    
-VariableDeclaration
-  = id:Identifier init:(__ Initialiser)? {
-      return insertLocationData(new ast.VariableDeclarator(id, extractOptional(init, 1)), text(), line(), column());
+  / CopyToken __ init:Expression __ ToToken __ id:Identifier {
+      return insertLocationData(new ast.VariableDeclarationStatement(id, init), text(), line(), column());
     }
-  / id:Pattern init:(__ Initialiser)? {
-      return insertLocationData(new ast.VariableDeclarator(id, extractOptional(init, 1)), text(), line(), column());
-    }
-
-Initialiser
-  = ToToken __ expression:Expression { return expression; }
-  
+ 
 FunctionDeclaration
   = (OnToken / ToToken) __ id:Identifier __
     "(" __ params:(ParameterList __)? ")" __
@@ -577,21 +569,6 @@ RepeatStatement
   }
   / RepeatToken __ WithToken __ loopVariable:Identifier __ InToken __ list:Expression __ body:Block __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatListStatement(loopVariable, list, body), text(), line(), column());
-  }
-
-UseStatement
-  = UseToken __ identifiers:UseIdentifierList EOS
-    { return new ast.UseStatement(identifiers) }
-
-UseIdentifierList
-  = first:UseIdentifier rest:(__ "," __ UseIdentifier)* {
-      return buildList(first, rest, 3);
-    }
-    
-UseIdentifier
-  = Identifier
-  / ":" id:Identifier {
-    return id.asPredefinedCollection();
   }
 
 LogicalORExpression
@@ -821,6 +798,3 @@ RecordPropertyName
   = IdentifierName
   / StringLiteral
   / NumericLiteral
-
-Pattern
-  = ArrayPattern
