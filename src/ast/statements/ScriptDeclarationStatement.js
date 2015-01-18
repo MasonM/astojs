@@ -47,9 +47,40 @@ ScriptDeclarationStatement.prototype.codegen = function() {
     };
     for (var i = 0; i < this.properties.length; i++) {
         this.body.body.push({
-            "type": "VariableDeclaration",
-            "kind": "let",
-            "declarations": [this.properties[i]]
+            "type": "ExpressionStatement",
+            "expression": {
+                "type": "AssignmentExpression",
+                "operator": "=",
+                "left": {
+                    "type": "MemberExpression",
+                    "computed": false,
+                    "object": {
+                        "type": "ThisExpression"
+                    },
+                    "property": this.properties[i].id
+                },
+                "right": this.properties[i].init
+            }
+        });
+    }
+    for (var i = 0; i < this.handlers.length; i++) {
+        this.handlers[i].type = "FunctionExpression";
+        util = require('util');
+        this.body.body.push({
+            "type": "ExpressionStatement",
+            "expression": {
+                "type": "AssignmentExpression",
+                "operator": "=",
+                "left": {
+                    "type": "MemberExpression",
+                    "computed": false,
+                    "object": {
+                        "type": "ThisExpression"
+                    },
+                    "property": this.handlers[i].id
+                },
+                "right": this.handlers[i]
+            }
         });
     }
     return this;

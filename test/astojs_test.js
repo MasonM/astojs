@@ -192,7 +192,7 @@ describe('positional subroutines:', function () {
     it('call to subroutine with several parameters', generateTest('helloWorld(foo, 2+2, "bar")', 'helloWorld(foo,2+2,"bar");'));
 });
 
-describe('positional subroutines:', function () {
+describe('labelled subroutines:', function () {
     it('simple subroutine with one AS labelled parameter', generateTest("on rock around the clock\n"+
         "return clock\n"+
     "end", 'function rock(args){var clock=args["around"];return clock;}'));
@@ -202,8 +202,35 @@ describe('positional subroutines:', function () {
 });
 
 describe('script objects:', function () {
-    it('minimal script object', generateTest('script helloWorld end script', 'function helloWorld(){}'));
+    it('minimal script object', generateTest('script helloWorld end', 'function helloWorld(){}'));
     it('script object with a property', generateTest("script helloWorld \n"+
         "property foo : \"bar\"\n" +
-    "end script", 'function helloWorld(){let foo="bar";}'));
+    "end script", 'function helloWorld(){this.foo="bar";}'));
+    it('script object with multiple properties', generateTest("script helloWorld \n"+
+        "property foo : \"bar\"\n" +
+        "property bam : \"baz\"\n" +
+        "property bar : \"bao\"\n" +
+    "end", 'function helloWorld(){this.foo="bar";this.bam="baz";this.bar="bao";}'));
+
+    it('script object with a handler', generateTest("script helloWorld\n" +
+        "on sayHello()\n" +
+        "   return 'Hello'\n" +
+        "end sayHello\n" +
+    "end", "function helloWorld(){"+
+        "this.sayHello=function sayHello(){"+
+            "return\"Hello\";"+
+        "};"+
+    "}"));
+
+    it('script object with a handler and a property', generateTest("script helloWorld\n" +
+        "property HowManyTimes:0\n" +
+        "on sayHello(someone)\n" +
+        "   return 'Hello'\n" +
+        "end\n" +
+    "end", "function helloWorld(){"+
+        "this.HowManyTimes=0;"+
+        "this.sayHello=function sayHello(someone){"+
+            "return\"Hello\";"+
+        "};"+
+    "}"));
 });
