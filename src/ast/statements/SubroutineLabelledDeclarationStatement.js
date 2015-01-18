@@ -37,7 +37,6 @@ function SubroutineLabelledDeclarationStatement(id, directParam, asLabelledParam
 SubroutineLabelledDeclarationStatement.prototype = Object.create(Node);
 
 SubroutineLabelledDeclarationStatement.prototype.getVariableDeclaratorForParam = function(param) {
-    console.log("FOO " + param.label);
     return {
         "type": "VariableDeclarator",
         "id": param.id,

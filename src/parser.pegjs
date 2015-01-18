@@ -138,105 +138,105 @@ ReservedWord
   
 // Ref: https://developer.apple.com/library/mac/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_keywords.html#//apple_ref/doc/uid/TP40000983-CH222-SW2
 Keyword
-  = "about"
-  / "above"
-  / "after"
-  / "against"
+  = AboutToken
+  / AboveToken
+  / AfterToken
+  / AgainstToken
   / AndToken
-  / "apart from"
-  / "around"
+  / ApartFromToken
+  / AroundToken
   / AsToken
-  / "aside from"
-  / "at"
-  / "back"
-  / "before"
-  / "beginning"
-  / "behind"
-  / "below"
-  / "beneath"
-  / "beside"
-  / "between"
-  / "but"
+  / AsideFromToken
+  / AtToken
+  / BackToken
+  / BeforeToken
+  / BeginningToken
+  / BehindToken
+  / BelowToken
+  / BeneathToken
+  / BesideToken
+  / BetweenToken
+  / ButToken
   / ByToken
-  / "considering"
+  / ConsideringToken
   / ContinueToken
   / CopyToken
   / DivToken
-  / "does"
-  / "eighth"
+  / DoesToken
+  / EighthToken
   / ElseToken
   / EndToken
-  / "equal"
-  / "equals"
-  / "error"
-  / "every"
-  / "exit"
+  / EqualToken
+  / EqualsToken
+  / ErrorToken
+  / EveryToken
+  / ExitToken
   / FalseToken
-  / "fifth"
-  / "first"
+  / FifthToken
+  / FirstToken
   / ForToken
-  / "fourth"
+  / FourthToken
   / FromToken
-  / "front"
-  / "get"
+  / FrontToken
+  / GetToken
   / GivenToken
-  / "gloal"
+  / GlobalToken
   / IfToken
-  / "ignoring"
+  / IgnoringToken
   / InToken
-  / "instead of"
-  / "into"
-  / "is"
-  / "it"
-  / "its"
-  / "last"
-  / "local"
-  / "me"
-  / "middle"
+  / InsteadOfToken
+  / IntoToken
+  / IsToken
+  / ItToken
+  / ItsToken
+  / LastToken
+  / LocalToken
+  / MeToken
+  / MiddleToken
   / ModToken
-  / "my"
-  / "ninth"
+  / MyToken
+  / NinthToken
   / NotToken
   / OfToken
   / OnToken
-  / "onto"
+  / OntoToken
   / OrToken
-  / "out of"
-  / "over"
+  / OutOfToken
+  / OverToken
   / PropertyToken
-  / "put"
-  / "ref"
-  / "reference"
+  / PutToken
+  / RefToken
+  / ReferenceToken
   / RepeatToken
   / ReturnToken
   / ScriptToken
-  / "second"
+  / SecondToken
   / SetToken
-  / "seventh"
-  / "since"
-  / "sixth"
-  / "some"
-  / "tell"
-  / "tenth"
-  / "that"
+  / SeventhToken
+  / SinceToken
+  / SixthToken
+  / SomeToken
+  / TellToken
+  / TenthToken
+  / ThatToken
   / TheToken
   / ThenToken
-  / "third"
-  / "through"
-  / "thru"
-  / "timeout"
+  / ThirdToken
+  / ThroughToken
+  / ThruToken
+  / TimeoutToken
   / TimesToken
   / ToToken
-  / "transaction"
+  / TransactionToken
   / TrueToken
   / TryToken
   / UntilToken
   / UseToken
-  / "where"
+  / WhereToken
   / WhileToken
-  / "whose"
+  / WhoseToken
   / WithToken
-  / "without"
+  / WithoutToken
   / ThisToken
   / ThrowToken
   / BreakToken
@@ -382,8 +382,8 @@ WhileToken        = "while"         !IdentifierPart
 RepeatToken       = "repeat"        !IdentifierPart
 TimesToken        = "times"         !IdentifierPart
 UntilToken        = "until"         !IdentifierPart
-InToken           = "in"
-OfToken           = "of"
+InToken           = "in"            !IdentifierPart
+OfToken           = "of"            !IdentifierPart
 TryToken          = "try"           !IdentifierPart
 OnToken           = "on"            !IdentifierPart
 ToToken           = "to"            !IdentifierPart
@@ -399,10 +399,75 @@ UndefinedToken    = "undefined"     !IdentifierPart
 DivToken          = "div"           !IdentifierPart
 ModToken          = "mod"           !IdentifierPart
 CopyToken         = "copy"          !IdentifierPart
+WithoutToken      = "without"       !IdentifierPart
+WhoseToken        = "whose"         !IdentifierPart
+WhereToken        = "where"         !IdentifierPart
+TransactionToken  = "transaction"   !IdentifierPart
+TimeoutToken      = "timeout"       !IdentifierPart
+AboutToken        = "about"         !IdentifierPart
+AboveToken        = "above"         !IdentifierPart
+AfterToken        = "after"         !IdentifierPart
+AgainstToken      = "against"       !IdentifierPart
+ApartFromToken    = "apart from"    !IdentifierPart
+AroundToken       = "around"        !IdentifierPart
+AsideFromToken    = "aside from"    !IdentifierPart
+AtToken           = "at"            !IdentifierPart
+BackToken         = "back"          !IdentifierPart
+BeforeToken       = "before"        !IdentifierPart
+BeginningToken    = "beginning"     !IdentifierPart
+BehindToken       = "behind"        !IdentifierPart
+BelowToken        = "below"         !IdentifierPart
+BeneathToken      = "beneath"       !IdentifierPart
+BesideToken       = "beside"        !IdentifierPart
+BetweenToken      = "between"       !IdentifierPart
+ButToken          = "but"           !IdentifierPart
+ConsideringToken  = "considering"   !IdentifierPart 
+DoesToken         = "does"          !IdentifierPart
+EighthToken       = "eighth"        !IdentifierPart
+EqualToken        = "equal"         !IdentifierPart 
+EqualsToken       = "equals"        !IdentifierPart
+ErrorToken        = "error"         !IdentifierPart
+EveryToken        = "every"         !IdentifierPart
+ExitToken         = "exit"          !IdentifierPart
+FifthToken        = "fifth"         !IdentifierPart
+FirstToken        = "first"         !IdentifierPart
+FourthToken       = "fourth"        !IdentifierPart
+FrontToken        = "front"         !IdentifierPart
+GlobalToken       = "global"        !IdentifierPart
+GetToken          = "get"           !IdentifierPart
+IgnoringToken     = "ignoring"      !IdentifierPart
+InsteadOfToken    = "instead of"    !IdentifierPart
+IntoToken         = "into"          !IdentifierPart
+IsToken           = "is"            !IdentifierPart
+ItToken           = "it"            !IdentifierPart
+ItsToken          = "its"           !IdentifierPart
+LastToken         = "last"          !IdentifierPart
+LocalToken        = "local"         !IdentifierPart
+MeToken           = "me"            !IdentifierPart
+MiddleToken       = "middle"        !IdentifierPart
+MyToken           = "my"            !IdentifierPart
+OntoToken         = "onto"          !IdentifierPart
+NinthToken        = "ninth"         !IdentifierPart
+ThruToken         = "thru"          !IdentifierPart
+OutOfToken        = "out of"        !IdentifierPart
+OverToken         = "over"          !IdentifierPart
+PutToken          = "put"           !IdentifierPart 
+ThroughToken      = "through"       !IdentifierPart
+ThirdToken        = "third"         !IdentifierPart
+ThatToken         = "that"          !IdentifierPart
+TenthToken        = "tenth"         !IdentifierPart
+TellToken         = "tell"          !IdentifierPart
+SomeToken         = "some"          !IdentifierPart
+SixthToken        = "sixth"         !IdentifierPart
+SinceToken        = "since"         !IdentifierPart
+SeventhToken      = "seventh"       !IdentifierPart
+SecondToken       = "second"        !IdentifierPart
+ReferenceToken    = "reference"     !IdentifierPart
+RefToken          = "ref"           !IdentifierPart
 StartsWithToken   = ("start with" / "starts with" / "begin with" / "begins with") !IdentifierPart
 EndsWithToken     = ("end with" / "ends with") !IdentifierPart
 PropertyToken     = ("property" / "prop") !IdentifierPart
-ScriptToken       = "script"
+ScriptToken       = "script"        !IdentifierPart
 GivenToken        = "given"         !IdentifierPart
 __
   = (WhiteSpace / LineTerminatorSequence / Comment / TheToken / "¬")*
@@ -428,8 +493,8 @@ StatementList
 
 Statement
   = VariableStatement
-  / ScriptDeclaration
-  / FunctionDeclaration
+  / ScriptDeclarationStatement
+  / FunctionDeclarationStatement
   / IfStatement
   / ReturnStatement
   / ThrowStatement
@@ -456,7 +521,7 @@ VariableStatement
       return insertLocationData(new ast.VariableDeclarationStatement(id, init), text(), line(), column());
     }
  
-FunctionDeclaration
+FunctionDeclarationStatement
   = (OnToken / ToToken) __ id:Identifier __
     "(" __ params:(PositionalParameterList __)? ")" __
     __ body:Block __ 
@@ -484,7 +549,7 @@ PositionalParameterList
     }
 
 DirectLabelledParameter
-  = label:(OfToken / InToken) __ id:Identifier {
+  = label:("of" / "in") __ id:Identifier {
       return insertLocationData(new ast.LabelledParameter(label, id), text(), line(), column());
   }
 
@@ -534,10 +599,10 @@ UserLabelledParameter
     return insertLocationData(new ast.Parameter(label, id), text(), line(), column());
   }
 
-ScriptDeclaration
+ScriptDeclarationStatement
   = ScriptToken __ id:Identifier
     __ properties:ScriptPropertyList? __
-    __ handlers:FunctionDeclaration* __
+    __ handlers:FunctionDeclarationStatement* __
     __ statements:Block __ 
     EndToken _ ScriptToken?
     {
@@ -616,7 +681,7 @@ RepeatStatement
     EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatRangeStatement(loopVariable, start, end, extractOptional(step, 2), body), text(), line(), column());
   }
-  / RepeatToken __ WithToken __ loopVariable:Identifier __ InToken __ list:Expression __ body:Block __ EndToken _ RepeatToken? {
+  / RepeatToken __ WithToken __ loopVariable:Identifier __ "in" __ list:Expression __ body:Block __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatListStatement(loopVariable, list, body), text(), line(), column());
   }
 
