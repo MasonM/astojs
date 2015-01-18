@@ -603,11 +603,11 @@ ScriptDeclarationStatement
   = ScriptToken __ id:Identifier
     __ properties:ScriptPropertyList? __
     __ handlers:FunctionDeclarationStatement* __
-    __ statements:Block __ 
+    __ implicitrun:Block __ 
     EndToken _ ScriptToken?
     {
       return insertLocationData(
-        new ast.ScriptDeclarationStatement(id, optionalList(properties), optionalList(handlers), optionalList(statements)),
+        new ast.ScriptDeclarationStatement(id, optionalList(properties), optionalList(handlers), implicitrun),
         text(), line(), column()
       );
     }

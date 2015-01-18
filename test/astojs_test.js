@@ -233,4 +233,14 @@ describe('script objects:', function () {
             "return\"Hello\";"+
         "};"+
     "}"));
+
+    it('script object with implicit run statement', generateTest("script helloWorld\n" +
+        "property HowManyTimes:0\n" +
+        "   return 'Hello'\n" +
+    "end", "function helloWorld(){"+
+        "this.HowManyTimes=0;"+
+        "this.run=function run(){"+
+            "return\"Hello\";"+
+        "};"+
+    "}"));
 });
