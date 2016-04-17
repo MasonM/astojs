@@ -124,7 +124,7 @@ IdentifierName "identifier"
 // From https://developer.apple.com/library/mac/documentation/AppleScript/Conceptual/AppleScriptLangGuide/conceptual/ASLR_lexical_conventions.html#//apple_ref/doc/uid/TP40000983-CH214-SW4
 // "An identifier must begin with a letter and can contain any of these characters: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_"
 IdentifierStart
-  = [a-z]i
+  = [_a-z]i
 
 IdentifierPart
   = [a-z0-9_]i
