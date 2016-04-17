@@ -1,4 +1,4 @@
-var escodegen = module.require('escodegen');
+var escodegen = require('escodegen');
 
 exports.compile = function (parser, sourceCode, options) {
     var parsed = parser.parse(sourceCode);

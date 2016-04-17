@@ -1,6 +1,6 @@
 {
-  var appRoot = module.require('app-root-path'),
-    ast = module.require(appRoot + '/src/ast');
+  var appRoot = require('app-root-path'),
+    ast = require(appRoot + '/src/ast');
   
   function filledArray(count, value) {
     var result = new Array(count), i;

@@ -1,5 +1,5 @@
-var appRoot = module.require('app-root-path'),
-    Node = module.require(appRoot + "/src/ast/Node").Node;
+var appRoot = require('app-root-path'),
+    Node = require(appRoot + "/src/ast/Node").Node;
 
 function LabelledParameter(label, id) {
     Node.call(this);

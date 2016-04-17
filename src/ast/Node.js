@@ -1,4 +1,4 @@
-var appRoot = module.require('app-root-path');
+var appRoot = require('app-root-path');
 
 function Node() {
   this.codeGenerated = false;
@@ -18,7 +18,7 @@ function Node() {
     }
 
     var myParent = self.parent;
-    var blockStatement = module.require(appRoot + '/src/ast/statements/BlockStatement');
+    var blockStatement = require(appRoot + '/src/ast/statements/BlockStatement');
 
     var block = new blockStatement.BlockStatement([self]);
     block.parent = myParent;

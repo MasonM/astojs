@@ -1,4 +1,4 @@
-var appRoot = module.require('app-root-path'),
+var appRoot = require('app-root-path'),
     nodes = [
     'LabelledParameter',
     'Program',
@@ -35,5 +35,5 @@ var appRoot = module.require('app-root-path'),
 
 nodes.forEach(function(node) {
     var name = node.substring(node.lastIndexOf('/') + 1);
-    module.exports[name] = module.require(appRoot + '/src/ast/' + node)[name];
+    module.exports[name] = require(appRoot + '/src/ast/' + node)[name];
 });
