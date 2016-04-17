@@ -19,7 +19,7 @@
     "pegjs": "0.9.0",
     "nomnom": "~1.8.1",
     "js-beautify": "~1.5.4",
-    "escodegen": "~1.4.0",
+    "escodegen": "~1.8.0",
     "underscore": "~1.7.0",
     "chalk": "~0.5.1",
     "app-root-path": "~1.0.0"
