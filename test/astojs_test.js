@@ -23,6 +23,8 @@ describe('literals:', function () {
     it('true boolean',   generateTest('true', 'true;'));
     it('false boolean',  generateTest('false', 'false;'));
 
+    it('null',  generateTest('null', 'null;'));
+
     it('decimal number', generateTest('10', '10;'));
     it('negative float', generateTest('-10.51', '-10.51;'));
     it('float in exponential notation', generateTest('10.51E+5', '1051e3;'));

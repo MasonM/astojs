@@ -26,6 +26,7 @@ var nodes = [
     'statements/ScriptDeclarationStatement',
     'statements/VariableDeclarationStatement',
     'literals/BooleanLiteral',
+    'literals/NullLiteral',
     'literals/Identifier',
     'literals/NumberLiteral',
     'literals/StringLiteral',
