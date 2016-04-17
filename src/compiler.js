@@ -1,7 +1,6 @@
-var parser = module.require('./parser'),
-    escodegen = module.require('escodegen');
+var escodegen = module.require('escodegen');
 
-exports.compile = function (sourceCode, options) {
+exports.compile = function (parser, sourceCode, options) {
     var parsed = parser.parse(sourceCode);
 
     if (!parsed) return null;

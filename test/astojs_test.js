@@ -3,6 +3,7 @@
 
 var should = require('should'),
     compiler = require('../src/compiler'),
+    parser = module.require('../src/parser'),
     util = require('util'),
     compilerOptions = {
         format: {
@@ -15,7 +16,7 @@ var should = require('should'),
     
 function generateTest(code, expectation) {
   return function () {
-    should(compiler.compile(code, compilerOptions)).be.exactly(expectation);
+    should(compiler.compile(parser, code, compilerOptions)).be.exactly(expectation);
   };
 }
 
