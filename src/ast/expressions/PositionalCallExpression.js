@@ -1,4 +1,5 @@
-var Node = module.require("../Node").Node,
+var appRoot = module.require('app-root-path'),
+    Node = module.require(appRoot + "/src/ast/Node").Node,
     _ = require('underscore');
 
 function PositionalCallExpression(callee, args) {

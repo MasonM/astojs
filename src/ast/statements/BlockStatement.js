@@ -1,5 +1,6 @@
-var Node = module.require("../Node").Node,
-    _ = module.require('underscore');
+var appRoot = module.require('app-root-path'),
+    Node = module.require(appRoot + "/src/ast/Node").Node,
+    _ = require('underscore');
 
 function BlockStatement(body) {
     Node.call(this);

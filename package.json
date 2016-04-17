@@ -21,7 +21,8 @@
     "js-beautify": "~1.5.4",
     "escodegen": "~1.4.0",
     "underscore": "~1.7.0",
-    "chalk": "~0.5.1"
+    "chalk": "~0.5.1",
+    "app-root-path": "~1.0.0"
   },
   "devDependencies": {
      "grunt-mocha-cli": "~1.9.0",

@@ -1,4 +1,5 @@
-var Node = module.require("./Node").Node;
+var appRoot = module.require('app-root-path'),
+    Node = module.require(appRoot + "/src/ast/Node").Node;
 
 function RecordProperty(key, value, shorthand, method) {
     Node.call(this);

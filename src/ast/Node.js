@@ -1,3 +1,5 @@
+var appRoot = module.require('app-root-path');
+
 function Node() {
   this.codeGenerated = false;
   this.definedIdentifiers = [];
@@ -16,7 +18,7 @@ function Node() {
     }
 
     var myParent = self.parent;
-    var blockStatement = module.require('./statements/BlockStatement');
+    var blockStatement = module.require(appRoot + '/src/ast/statements/BlockStatement');
 
     var block = new blockStatement.BlockStatement([self]);
     block.parent = myParent;

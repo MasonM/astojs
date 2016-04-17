@@ -1,6 +1,7 @@
-var Node = module.require("../Node").Node,
-    StringLiteral = require("../literals/StringLiteral").StringLiteral,
-    ArrayExpression = require("../expressions/ArrayExpression").ArrayExpression;
+var appRoot = module.require('app-root-path'),
+    Node = module.require(appRoot + "/src/ast/Node").Node,
+    StringLiteral = require(appRoot + "/src/ast/literals/StringLiteral").StringLiteral,
+    ArrayExpression = require(appRoot + "/src/ast/expressions/ArrayExpression").ArrayExpression;
 
 function BinaryExpression(left, operator, right) {
     Node.call(this);

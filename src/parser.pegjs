@@ -1,5 +1,6 @@
 {
-  var ast = module.require('./ast');
+  var appRoot = module.require('app-root-path'),
+    ast = module.require(appRoot + '/src/ast');
   
   function filledArray(count, value) {
     var result = new Array(count), i;
