@@ -63,6 +63,8 @@ describe('comparison expressions:', function () {
     it('equal to', generateTest('a equal to b', 'a===b;'));
     it('is equal to', generateTest('a is equal to b', 'a===b;'));
 
+    it('is null', generateTest('a is null', 'a===null;'));
+
     it('≠', generateTest('a ≠ b', 'a!==b;'));
     it('is not', generateTest('a is not b', 'a!==b;'));
     it('isn\'t', generateTest('a isn\'t b', 'a!==b;'));

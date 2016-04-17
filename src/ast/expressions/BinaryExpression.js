@@ -99,6 +99,7 @@ BinaryExpression.prototype.codegen = function () {
         case "equal":
         case "is equal to":
         case "is equal":
+        case "is":
             this.operator = "===";
             break;
         case "≠":

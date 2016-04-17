@@ -706,6 +706,7 @@ EqualityExpression
     rest:(__ EqualityOperator __ RelationalExpression)*
     { return buildBinaryExpression(first, rest); }
     
+// https://developer.apple.com/library/mac/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_operators.html
 EqualityOperator
   = "="
   / "!="
@@ -725,12 +726,14 @@ EqualityOperator
   / "isn't"
   / "doesn't equal"
   / "does not equal"
+  / "is" // Not in operator list, but accepted by (seems to be only for "is null")
 
 RelationalExpression
   = first:StartsWithExpression
     rest:(__ RelationalOperator __ StartsWithExpression)*
     { return buildBinaryExpression(first, rest); }
 
+// https://developer.apple.com/library/mac/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_operators.html
 RelationalOperator
   = $("<" !"=")
   / $(">" !"=")
