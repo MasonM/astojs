@@ -41,13 +41,13 @@
 
   function buildBinaryExpression(first, rest) {
     return buildTree(first, rest, function(result, element) {
-      return insertLocationData(new ast.BinaryExpression(result, element[1], element[3]), text(), line(), column());
+      return insertLocationData(new ast.BinaryExpression(result, element[1], element[3]), text(), location());
     });
   }
   
   function buildLogicalExpression(first, rest) {
     return buildTree(first, rest, function(result, element) {
-      return insertLocationData(new ast.LogicalExpression(result, element[1], element[3]), text(), line(), column());
+      return insertLocationData(new ast.LogicalExpression(result, element[1], element[3]), text(), location());
     });
   }
 
@@ -55,16 +55,16 @@
     return value !== null ? value : [];
   }
   
-  function insertLocationData(node, text, line, column) {
+  function insertLocationData(node, text, location) {
     var lines = text.split("\n");
     node.loc = {
       "start": {
-        "line": line,
-        "column": column - 1
+        "line": location.start.line,
+        "column": location.start.column - 1
       },
       "end": {
-        "line": line + lines.length - 1,
-        "column": (lines.length === 1 ? (column - 1) : 0) + 
+        "line": location.end.line + lines.length - 1,
+        "column": (lines.length === 1 ? (location.end.column - 1) : 0) + 
           lines[lines.length - 1].length
       }
     };
@@ -118,7 +118,7 @@ Identifier
 
 IdentifierName "identifier"
   = first:IdentifierStart rest:IdentifierPart* {
-      return insertLocationData(new ast.Identifier(first + rest.join("")), text(), line(), column());
+      return insertLocationData(new ast.Identifier(first + rest.join("")), text(), location());
     }
 
 // From https://developer.apple.com/library/mac/documentation/AppleScript/Conceptual/AppleScriptLangGuide/conceptual/ASLR_lexical_conventions.html#//apple_ref/doc/uid/TP40000983-CH214-SW4
@@ -253,14 +253,14 @@ Literal
   / StringLiteral
   
 NullLiteral
-  = NullToken { return insertLocationData(new ast.NullLiteral(), text(), line(), column()); }
+  = NullToken { return insertLocationData(new ast.NullLiteral(), text(), location()); }
 
 UndefinedLiteral
-  = UndefinedToken { return insertLocationData(new ast.UndefinedLiteral(), text(), line(), column()); }
+  = UndefinedToken { return insertLocationData(new ast.UndefinedLiteral(), text(), location()); }
   
 BooleanLiteral
-  = TrueToken  { return insertLocationData(new ast.BooleanLiteral("true"), text(), line(), column()); }
-  / FalseToken { return insertLocationData(new ast.BooleanLiteral("false"), text(), line(), column()); }
+  = TrueToken  { return insertLocationData(new ast.BooleanLiteral("true"), text(), location()); }
+  / FalseToken { return insertLocationData(new ast.BooleanLiteral("false"), text(), location()); }
 
 NumericLiteral "number"
   = literal:DecimalLiteral !(IdentifierStart / DecimalDigit) {
@@ -269,13 +269,13 @@ NumericLiteral "number"
     
 DecimalLiteral
   = DecimalIntegerLiteral "." !"." DecimalDigit* ExponentPart? {
-      return insertLocationData(new ast.NumberLiteral(text()), text(), line(), column());
+      return insertLocationData(new ast.NumberLiteral(text()), text(), location());
     }
   / "." !"." DecimalDigit+ ExponentPart? {
-      return insertLocationData(new ast.NumberLiteral(text()), text(), line(), column());
+      return insertLocationData(new ast.NumberLiteral(text()), text(), location());
     }
   / DecimalIntegerLiteral ExponentPart? {
-      return insertLocationData(new ast.NumberLiteral(text()), text(), line(), column());
+      return insertLocationData(new ast.NumberLiteral(text()), text(), location());
     }
 
 DecimalIntegerLiteral
@@ -299,10 +299,10 @@ SignedInteger
 
 StringLiteral "string"
   = '"' chars:DoubleStringCharacter* '"' {
-      return insertLocationData(new ast.StringLiteral(chars, column()), text(), line(), column());
+      return insertLocationData(new ast.StringLiteral(chars, location().start.column), text(), location());
     }
   / "'" chars:SingleStringCharacter* "'" {
-      return insertLocationData(new ast.StringLiteral(chars, column()), text(), line(), column());
+      return insertLocationData(new ast.StringLiteral(chars, location().start.column), text(), location());
     }
 
 DoubleStringCharacter
@@ -483,7 +483,7 @@ EOF
 
 Program
   = body:StatementList? {
-      return insertLocationData(new ast.Program(optionalList(body)), text(), line(), column());
+      return insertLocationData(new ast.Program(optionalList(body)), text(), location());
     }
    
 StatementList
@@ -505,20 +505,20 @@ Statement
     
 ExpressionStatement
   = !OnToken expression:Expression {
-      return insertLocationData(new ast.ExpressionStatement(expression), text(), line(), column());
+      return insertLocationData(new ast.ExpressionStatement(expression), text(), location());
     }
 
 Block
   = body:(StatementList __)? {
-      return insertLocationData(new ast.BlockStatement(optionalList(extractOptional(body, 0))), text(), line(), column());
+      return insertLocationData(new ast.BlockStatement(optionalList(extractOptional(body, 0))), text(), location());
     }
     
 VariableStatement
   = SetToken __ id:Identifier __ ToToken __ init:Expression {
-      return insertLocationData(new ast.VariableDeclarationStatement(id, init), text(), line(), column());
+      return insertLocationData(new ast.VariableDeclarationStatement(id, init), text(), location());
     }
   / CopyToken __ init:Expression __ ToToken __ id:Identifier {
-      return insertLocationData(new ast.VariableDeclarationStatement(id, init), text(), line(), column());
+      return insertLocationData(new ast.VariableDeclarationStatement(id, init), text(), location());
     }
  
 FunctionDeclarationStatement
@@ -529,7 +529,7 @@ FunctionDeclarationStatement
     {
       return insertLocationData(
           new ast.SubroutinePositionalDeclarationStatement(id, optionalList(extractOptional(params, 0)), body), 
-       text(), line(), column());
+       text(), location());
     }
   / (OnToken / ToToken) __ id:Identifier __
     direct:DirectLabelledParameter? __
@@ -540,7 +540,7 @@ FunctionDeclarationStatement
     {
       return insertLocationData(
         new ast.SubroutineLabelledDeclarationStatement(id, direct, aslabelled, optionalList(extractOptional(userlabelled, 1)), body),
-       text(), line(), column());
+       text(), location());
     }
 
 PositionalParameterList
@@ -550,7 +550,7 @@ PositionalParameterList
 
 DirectLabelledParameter
   = label:("of" / "in") __ id:Identifier {
-      return insertLocationData(new ast.LabelledParameter(label, id), text(), line(), column());
+      return insertLocationData(new ast.LabelledParameter(label, id), text(), location());
   }
 
 ASLabelledParameterList
@@ -560,7 +560,7 @@ ASLabelledParameterList
 
 ASLabelledParameter
   = label:ASLabel _ id:Identifier {
-      return insertLocationData(new ast.LabelledParameter(label, id), text(), line(), column());
+      return insertLocationData(new ast.LabelledParameter(label, id), text(), location());
   }
 
 ASLabel
@@ -596,7 +596,7 @@ UserLabelledParameterList
 
 UserLabelledParameter
   = label:Identifier __ ":" __ id:Identifier{
-    return insertLocationData(new ast.Parameter(label, id), text(), line(), column());
+    return insertLocationData(new ast.Parameter(label, id), text(), location());
   }
 
 ScriptDeclarationStatement
@@ -608,7 +608,7 @@ ScriptDeclarationStatement
     {
       return insertLocationData(
         new ast.ScriptDeclarationStatement(id, optionalList(properties), optionalList(handlers), implicitrun),
-        text(), line(), column()
+        text(), location()
       );
     }
 
@@ -617,7 +617,7 @@ ScriptPropertyList
 
 ScriptProperty
   = PropertyToken __ label:Identifier __ ":" __ initialValue:Expression __ {
-      return insertLocationData(new ast.ScriptProperty(label, initialValue), text(), line(), column());
+      return insertLocationData(new ast.ScriptProperty(label, initialValue), text(), location());
   }
 
 IfStatement
@@ -626,52 +626,52 @@ IfStatement
     alternate:(ElseToken __ Block __)?
     (EndToken _ IfToken? / EOS)
     {
-      return insertLocationData(new ast.IfStatement(test, consequent, extractOptional(alternate, 2)), text(), line(), column());
+      return insertLocationData(new ast.IfStatement(test, consequent, extractOptional(alternate, 2)), text(), location());
     }
   / IfToken _ test:Expression _ ThenToken? _ consequent:Statement _ (EndToken _ IfToken)? {
-      return insertLocationData(new ast.IfStatement(test, consequent, null), text(), line(), column());
+      return insertLocationData(new ast.IfStatement(test, consequent, null), text(), location());
     }
     
 ReturnStatement
   = ReturnToken _ argument:Expression {
-      return insertLocationData(new ast.ReturnStatement(argument), text(), line(), column());
+      return insertLocationData(new ast.ReturnStatement(argument), text(), location());
     }
   / ReturnToken {
-      return insertLocationData(new ast.ReturnStatement(null), text(), line(), column());
+      return insertLocationData(new ast.ReturnStatement(null), text(), location());
     }
 
 ThrowStatement
   = ThrowToken _ argument:Expression EOS {
-      return insertLocationData(new ast.ThrowStatement(argument), text(), line(), column());
+      return insertLocationData(new ast.ThrowStatement(argument), text(), location());
     }
     
 TryStatement
   = TryToken __ block:Block __ handler:Catch {
-      return insertLocationData(new ast.TryStatement(block, handler, null), text(), line(), column());
+      return insertLocationData(new ast.TryStatement(block, handler, null), text(), location());
     }
     
 Catch
   = CatchToken __ param:Identifier __ body:Block {
-      return insertLocationData(new ast.CatchClause(param, body), text(), line(), column());
+      return insertLocationData(new ast.CatchClause(param, body), text(), location());
     }
 
 BreakStatement
   = BreakToken EOS {
-      return insertLocationData(new ast.BreakStatement(), text(), line(), column());
+      return insertLocationData(new ast.BreakStatement(), text(), location());
     }
 
 RepeatStatement
   = RepeatToken __ body:Block __ EndToken _ RepeatToken? {
-        return insertLocationData(new ast.RepeatForeverStatement(body), text(), line(), column());
+        return insertLocationData(new ast.RepeatForeverStatement(body), text(), location());
     }
   / RepeatToken __ num:DecimalLiteral __ TimesToken? __ body:Block __ EndToken _ RepeatToken? {
-        return insertLocationData(new ast.RepeatNumTimesStatement(num, body), text(), line(), column());
+        return insertLocationData(new ast.RepeatNumTimesStatement(num, body), text(), location());
     }
   / RepeatToken __ WhileToken __ test:Expression __ body:Block __ EndToken _ RepeatToken? {
-        return insertLocationData(new ast.RepeatWhileStatement(test, body), text(), line(), column());
+        return insertLocationData(new ast.RepeatWhileStatement(test, body), text(), location());
   }
   / RepeatToken __ UntilToken __ test:Expression __ body:Block __ EndToken _ RepeatToken? {
-        return insertLocationData(new ast.RepeatUntilStatement(test, body), text(), line(), column());
+        return insertLocationData(new ast.RepeatUntilStatement(test, body), text(), location());
   }
   / RepeatToken __ WithToken __ loopVariable:Identifier __
     FromToken __ start:DecimalLiteral __
@@ -679,10 +679,10 @@ RepeatStatement
     step:(ByToken __ DecimalLiteral)? __
     body:Block __
     EndToken _ RepeatToken? {
-        return insertLocationData(new ast.RepeatRangeStatement(loopVariable, start, end, extractOptional(step, 2), body), text(), line(), column());
+        return insertLocationData(new ast.RepeatRangeStatement(loopVariable, start, end, extractOptional(step, 2), body), text(), location());
   }
   / RepeatToken __ WithToken __ loopVariable:Identifier __ "in" __ list:Expression __ body:Block __ EndToken _ RepeatToken? {
-        return insertLocationData(new ast.RepeatListStatement(loopVariable, list, body), text(), line(), column());
+        return insertLocationData(new ast.RepeatListStatement(loopVariable, list, body), text(), location());
   }
 
 LogicalORExpression
@@ -781,7 +781,7 @@ StartsWithExpression
   = left:EndsWithExpression
     rest:(__ StartsWithToken __ EndsWithExpression)* {
       return buildTree(left, rest, function(result, element) {
-        return insertLocationData(new ast.StartsWithExpression(result, element[3]), text(), line(), column());
+        return insertLocationData(new ast.StartsWithExpression(result, element[3]), text(), location());
       });
     }
 
@@ -789,7 +789,7 @@ EndsWithExpression
   = left:ConcatenativeExpression
     rest:(__ EndsWithToken __ ConcatenativeExpression)* {
       return buildTree(left, rest, function(result, element) {
-        return insertLocationData(new ast.EndsWithExpression(result, element[3]), text(), line(), column());
+        return insertLocationData(new ast.EndsWithExpression(result, element[3]), text(), location());
       });
     }
 
@@ -833,7 +833,7 @@ ExponentiativeOperator
   
 UnaryExpression
   = operator:UnaryOperator __ argument:PositionalCallExpression {
-      return insertLocationData(new ast.UnaryExpression(operator, argument), text(), line(), column());
+      return insertLocationData(new ast.UnaryExpression(operator, argument), text(), location());
     }
   / PositionalCallExpression
 
@@ -844,7 +844,7 @@ UnaryOperator
 
 PositionalCallExpression
   = callee:Identifier _ args:Arguments {
-      return insertLocationData(new ast.PositionalCallExpression(callee, args), text(), line(), column());
+      return insertLocationData(new ast.PositionalCallExpression(callee, args), text(), location());
   }
   / PrimaryExpression
 
@@ -868,7 +868,7 @@ PrimaryExpression
 
 ThisExpression
   = ThisToken {
-      return insertLocationData(new ast.ThisExpression(), text(), line(), column());
+      return insertLocationData(new ast.ThisExpression(), text(), location());
     }
   
 Expression
@@ -879,7 +879,7 @@ ArrayLiteral
        return new ast.ArrayExpression([]); 
      }
   / "{" __ elements:ElementList __ "}" {
-      return insertLocationData(new ast.ArrayExpression(elements), text(), line(), column());
+      return insertLocationData(new ast.ArrayExpression(elements), text(), location());
     }
 
 ElementList
@@ -893,7 +893,7 @@ ArrayPattern
        return  new ast.ArrayPattern([]); 
      }
   / "{" __ elements:PatternElementList __ "}" {
-      return insertLocationData(new ast.ArrayPattern(elements), text(), line(), column());
+      return insertLocationData(new ast.ArrayPattern(elements), text(), location());
     }
 
 PatternElementList
@@ -908,10 +908,10 @@ PatternElement
 
 RecordLiteral
   = "{" __ properties:RecordPropertyNameAndValueList __ "}" {
-       return insertLocationData(new ast.RecordExpression(properties), text(), line(), column());
+       return insertLocationData(new ast.RecordExpression(properties), text(), location());
      }
   / "{" __ properties:RecordPropertyNameAndValueList __ "," __ "}" {
-       return insertLocationData(new ast.RecordExpression(properties), text(), line(), column());
+       return insertLocationData(new ast.RecordExpression(properties), text(), location());
      }
      
 RecordPropertyNameAndValueList
@@ -921,7 +921,7 @@ RecordPropertyNameAndValueList
 
 RecordPropertyAssignment
   = key:RecordPropertyName __ ":" __ value:Expression {
-      return insertLocationData(new ast.RecordProperty(key, value, false, false), text(), line(), column());
+      return insertLocationData(new ast.RecordProperty(key, value, false, false), text(), location());
     }
 
 RecordPropertyName
