@@ -38,7 +38,7 @@
                     src: "src/parser.pegjs",
                     dest: "src/parser.js",
                     options: {
-                        trace: true
+                        trace: false
                     }
                 }
             },
