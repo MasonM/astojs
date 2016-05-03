@@ -25,6 +25,25 @@ function Node() {
 
         return block;
     };
+
+    this.assignObjectProperty = function(name, value) {
+        return {
+            "type": "ExpressionStatement",
+            "expression": {
+                "type": "AssignmentExpression",
+                "operator": "=",
+                "left": {
+                    "type": "MemberExpression",
+                    "computed": false,
+                    "object": {
+                        "type": "ThisExpression"
+                    },
+                    "property": name
+                },
+                "right": value
+            }
+        }
+    }
 }
 
 Node.prototype.codegen = function() {

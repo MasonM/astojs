@@ -124,6 +124,7 @@ IdentifierName "identifier"
 
 // From https://developer.apple.com/library/mac/documentation/AppleScript/Conceptual/AppleScriptLangGuide/conceptual/ASLR_lexical_conventions.html#//apple_ref/doc/uid/TP40000983-CH214-SW4
 // "An identifier must begin with a letter and can contain any of these characters: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_"
+// (despite the above, Applescript allows an identifier to start with an underscore too)
 IdentifierStart
   = [_a-z]i
 
@@ -494,6 +495,7 @@ StatementList
 
 Statement
   = VariableStatement
+  / ScriptPropertyStatement
   / ScriptDeclarationStatement
   / FunctionDeclarationStatement
   / IfStatement
@@ -602,7 +604,7 @@ UserLabelledParameter
 
 ScriptDeclarationStatement
   = ScriptToken __ id:Identifier
-    __ properties:ScriptPropertyList? __
+    __ properties:ScriptPropertyStatementList? __
     __ handlers:FunctionDeclarationStatement* __
     __ implicitrun:Block __ 
     EndToken _ ScriptToken?
@@ -613,12 +615,12 @@ ScriptDeclarationStatement
       );
     }
 
-ScriptPropertyList
-  = first:ScriptProperty rest:(__ ScriptProperty)* { return buildList(first, rest, 1); }
+ScriptPropertyStatementList
+  = first:ScriptPropertyStatement rest:(__ ScriptPropertyStatement)* { return buildList(first, rest, 1); }
 
-ScriptProperty
+ScriptPropertyStatement
   = PropertyToken __ label:Identifier __ ":" __ initialValue:Expression __ {
-      return insertLocationData(new ast.ScriptProperty(label, initialValue), text(), location());
+      return insertLocationData(new ast.ScriptPropertyStatement(label, initialValue), text(), location());
   }
 
 IfStatement
@@ -727,7 +729,7 @@ EqualityOperator
   / "isn't"
   / "doesn't equal"
   / "does not equal"
-  / "is" // Not in operator list, but accepted by (seems to be only for "is null")
+  / "is" // Not in operator list, but accepted by Applescript (seems to be only for "is null" and instanceof checks)
 
 RelationalExpression
   = first:StartsWithExpression

@@ -1,6 +1,5 @@
 var appRoot = require('app-root-path'),
-    Node = require(appRoot + "/src/ast/Node").Node,
-    _ = require('underscore');
+    Node = require(appRoot + "/src/ast/Node").Node;
 
 function VariableDeclarationStatement(id, init) {
     Node.call(this);

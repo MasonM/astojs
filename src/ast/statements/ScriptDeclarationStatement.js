@@ -22,25 +22,6 @@ function ScriptDeclarationStatement(id, properties, handlers, implicitrun) {
 
 ScriptDeclarationStatement.prototype = Object.create(Node);
 
-ScriptDeclarationStatement.prototype.assignObjectProperty = function(name, value) {
-    return {
-        "type": "ExpressionStatement",
-        "expression": {
-            "type": "AssignmentExpression",
-            "operator": "=",
-            "left": {
-                "type": "MemberExpression",
-                "computed": false,
-                "object": {
-                    "type": "ThisExpression"
-                },
-                "property": name
-            },
-            "right": value
-        }
-    }
-}
-
 ScriptDeclarationStatement.prototype.codegen = function() {
     if (!Node.prototype.codegen.call(this)) return;
 

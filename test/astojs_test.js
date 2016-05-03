@@ -207,6 +207,9 @@ describe('labelled subroutines:', function () {
 });
 
 describe('script objects:', function () {
+    it('top-level properties', generateTest("property name : \"bar\"\n" +
+        "property bam : \"baz\"\n", 'this.name="bar";this.bam="baz";'));
+
     it('minimal script object', generateTest('script helloWorld end', 'function helloWorld(){}'));
     it('script object with a property', generateTest("script helloWorld \n"+
         "property foo : \"bar\"\n" +

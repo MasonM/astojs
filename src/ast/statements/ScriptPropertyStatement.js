@@ -1,7 +1,7 @@
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function ScriptProperty(label, initialValue) {
+function ScriptPropertyStatement(label, initialValue) {
     Node.call(this);
     this.type = "Property";
     this.label = label;
@@ -10,14 +10,19 @@ function ScriptProperty(label, initialValue) {
     this.initialValue.parent = this;
 }
 
-ScriptProperty.prototype = Object.create(Node);
+ScriptPropertyStatement.prototype = Object.create(Node);
 
-ScriptProperty.prototype.codegen = function() {
+ScriptPropertyStatement.prototype.codegen = function() {
     if (!Node.prototype.codegen.call(this)) return;
     this.type = "VariableDeclarator";
     this.id = this.label.codegen();
     this.init = this.initialValue.codegen();
+    if (this.parent.type !== "FunctionDeclaration") {
+        // top-level script property
+        Object.assign(this, this.assignObjectProperty(this.id, this.init));
+    }
+
     return this;
 };
 
-exports.ScriptProperty = ScriptProperty;
+exports.ScriptPropertyStatement = ScriptPropertyStatement;
