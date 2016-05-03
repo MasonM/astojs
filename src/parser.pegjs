@@ -803,7 +803,7 @@ ConcatenativeExpression
     { return buildBinaryExpression(first, rest); }
 
 ConcatenativeOperator
-    = $("&" !"&")
+  = $("&" !"&")
 
 AdditiveExpression
   = first:MultiplicativeExpression
@@ -853,14 +853,14 @@ PositionalCallExpression
   / PrimaryExpression
 
 Arguments
-= "(" __ args:(ArgumentList __)? ")" {
-    return optionalList(extractOptional(args, 0));
-}
+  = "(" __ args:(ArgumentList __)? ")" {
+      return optionalList(extractOptional(args, 0));
+  }
 
 ArgumentList
-= first:Expression rest:(__ "," __ Expression)* {
-    return buildList(first, rest, 3);
-}
+  = first:Expression rest:(__ "," __ Expression)* {
+      return buildList(first, rest, 3);
+  }
 
 PrimaryExpression
   = ThisExpression
