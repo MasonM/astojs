@@ -20,6 +20,7 @@ class Node {
         }
 
         var myParent = this.parent;
+        // this require() cannot go to the top because of the circular dependency
         var blockStatement = require(appRoot + '/src/ast/statements/BlockStatement');
         var block = new blockStatement.BlockStatement([this]);
         block.parent = myParent;

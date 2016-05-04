@@ -68,7 +68,7 @@ Start
   = __ program:Program __ { return program; }
   
 StartComments
-  = comment:(. Comment?)* { return extractList(comment, 1).filter(elem => elem !== null); }
+  = comments:(Comment / . { return null; })* { return comments.filter(elem => elem !== null); }
 
 
 /* ----- A.1 Lexical Grammar ----- */

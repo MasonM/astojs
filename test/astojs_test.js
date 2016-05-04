@@ -22,7 +22,9 @@ function generateTest(code, expectation) {
 }
 
 describe('comments:', function () {
-    it('single EOL comment with --', generateTest('"foo" -- EOL comment', '"foo"; // EOL comment'));
+    it('single comment above', generateTest("-- comment above!\n\"foo\"", "// comment above!\n\"foo\";"));
+    it('single comment below', generateTest("\n\"foo\"\n-- comment below!", "\"foo\";\n// comment below!"));
+    it('single EOL comment to the right', generateTest('"foo" -- EOL comment', '"foo"; // EOL comment'));
 });
 
 describe('literals:', function () {
