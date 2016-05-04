@@ -1,5 +1,5 @@
 // astojs standard library
-"use strict";
+'use strict';
 
 Array.prototype.startsWith = function(arg) {
     if (!Array.isArray(arg)) return this[0] === arg;

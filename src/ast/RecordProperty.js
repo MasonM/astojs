@@ -1,28 +1,29 @@
+'use strict';
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function RecordProperty(key, value, shorthand, method) {
-    Node.call(this);
-    this.type = "Property";
-    this.kind = 'init';
-    this.method = method;
-    this.shorthand = shorthand;
-    this.computed = false;
+class RecordProperty extends Node {
+    constructor(key, value, shorthand, method) {
+        super();
+        this.type = "Property";
+        this.kind = 'init';
+        this.method = method;
+        this.shorthand = shorthand;
+        this.computed = false;
 
-    this.key = key;
-    this.key.parent = this;
+        this.key = key;
+        this.key.parent = this;
 
-    this.value = value;
-    this.value.parent = this;
+        this.value = value;
+        this.value.parent = this;
+    }
+
+    codegen() {
+        if (!super.codegen()) return;
+        this.key = this.key.codegen(false);
+        this.value = this.value.codegen(this.parent.type != "ObjectPattern");
+        return this;
+    }
 }
 
-RecordProperty.prototype = Object.create(Node);
-
-RecordProperty.prototype.codegen = function() {
-    if (!Node.prototype.codegen.call(this)) return;
-    this.key = this.key.codegen(false);
-    this.value = this.value.codegen(this.parent.type != "ObjectPattern");
-    return this;
-};
-
-exports.RecordProperty = RecordProperty;
+module.exports.RecordProperty = RecordProperty;

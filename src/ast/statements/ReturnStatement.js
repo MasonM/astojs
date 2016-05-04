@@ -1,19 +1,20 @@
+'use strict';
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function ReturnStatement(argument) {
-    Node.call(this);
-    this.type = "ReturnStatement";
-    this.argument = argument;
-    if (argument) this.argument.parent = this;
+class ReturnStatement extends Node {
+    constructor(argument) {
+        super();
+        this.type = "ReturnStatement";
+        this.argument = argument;
+        if (argument) this.argument.parent = this;
+    }
+
+    codegen() {
+        if (!super.codegen()) return;
+        if (this.argument) this.argument = this.argument.codegen();
+        return this;
+    }
 }
 
-ReturnStatement.prototype = Object.create(Node);
-
-ReturnStatement.prototype.codegen = function () {
-    if (!Node.prototype.codegen.call(this)) return;
-    if (this.argument) this.argument = this.argument.codegen();
-    return this;
-};
-
-exports.ReturnStatement = ReturnStatement;
+module.exports.ReturnStatement = ReturnStatement;

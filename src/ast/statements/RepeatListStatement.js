@@ -1,27 +1,28 @@
+'use strict';
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function RepeatListStatement(loopVariable, list, body) {
-    Node.call(this);
-    this.loopVariable = loopVariable;
-    this.loopVariable.parent = this;
+class RepeatListStatement extends Node {
+    constructor(loopVariable, list, body) {
+        super();
+        this.loopVariable = loopVariable;
+        this.loopVariable.parent = this;
 
-    this.list = list;
-    this.list.parent = this;
+        this.list = list;
+        this.list.parent = this;
 
-    this.body = body;
-    this.body.parent = this;
+        this.body = body;
+        this.body.parent = this;
+    }
+
+    codegen() {
+        if (!super.codegen()) return;
+        this.type = "ForInStatement";
+        this.left = this.loopVariable;
+        this.right = this.list;
+        this.body = this.body.blockWrap().codegen();
+        return this;
+    }
 }
 
-RepeatListStatement.prototype = Object.create(Node);
-
-RepeatListStatement.prototype.codegen = function () {
-    if (!Node.prototype.codegen.call(this)) return;
-    this.type = "ForInStatement";
-    this.left = this.loopVariable;
-    this.right = this.list;
-    this.body = this.body.blockWrap().codegen();
-    return this;
-};
-
-exports.RepeatListStatement = RepeatListStatement;
+module.exports.RepeatListStatement = RepeatListStatement;

@@ -1,19 +1,14 @@
+'use strict';
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function NumberLiteral(text) {
-    Node.call(this);
-    this.type = "Literal";
-
-    this.value = Number(text);
-    this.raw = text;
+class NumberLiteral extends Node {
+    constructor(text) {
+        super();
+        this.type = "Literal";
+        this.value = Number(text);
+        this.raw = text;
+    }
 }
 
-NumberLiteral.prototype = Object.create(Node);
-
-NumberLiteral.prototype.codegen = function () {
-    if (!Node.prototype.codegen.call(this)) return;
-    return this;
-};
-
-exports.NumberLiteral = NumberLiteral;
+module.exports.NumberLiteral = NumberLiteral;

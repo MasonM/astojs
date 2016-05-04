@@ -1,21 +1,22 @@
+'use strict';
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function LabelledParameter(label, id) {
-    Node.call(this);
-    this.type = "LabelledParameter";
-    this.label = label;
-    this.id = id;
-    this.id.parent = this;
+class LabelledParameter extends Node {
+    constructor(label, id) {
+        super();
+        this.type = "LabelledParameter";
+        this.label = label;
+        this.id = id;
+        this.id.parent = this;
+    }
+
+    codegen() {
+        if (!super.codegen()) return;
+        this.type = "Identifier";
+        this.id = this.id.codegen();
+        return this;
+    }
 }
 
-LabelledParameter.prototype = Object.create(Node);
-
-LabelledParameter.prototype.codegen = function() {
-    if (!Node.prototype.codegen.call(this)) return;
-    this.type = "Identifier";
-    this.id = this.id.codegen();
-    return this;
-};
-
-exports.LabelledParameter = LabelledParameter;
+module.exports.LabelledParameter = LabelledParameter;

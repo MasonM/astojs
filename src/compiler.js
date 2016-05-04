@@ -1,6 +1,7 @@
+'use strict';
 var escodegen = require('escodegen');
 
-exports.compile = function (parser, sourceCode, options) {
+module.exports.compile = function (parser, sourceCode, options) {
     var parsed = parser.parse(sourceCode);
 
     if (!parsed) return null;

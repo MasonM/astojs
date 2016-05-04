@@ -1,21 +1,17 @@
+'use strict';
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function Identifier(name) {
-    Node.call(this);
-    this.type = "Identifier";
-    this.global = false;
-    Object.defineProperty(this, 'name', {
-        value: name,
-        enumerable: true,
-    });
+class Identifier extends Node {
+    constructor(name) {
+        super();
+        this.type = "Identifier";
+        this.global = false;
+        Object.defineProperty(this, 'name', {
+            value: name,
+            enumerable: true,
+        });
+    }
 }
 
-Identifier.prototype = Object.create(Node);
-
-Identifier.prototype.codegen = function () {
-    if (!Node.prototype.codegen.call(this)) return;
-    return this;
-};
-
-exports.Identifier = Identifier;
+module.exports.Identifier = Identifier;

@@ -1,21 +1,22 @@
+'use strict';
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function UnaryExpression(operator, argument) {
-    Node.call(this);
-    this.type = "UnaryExpression";
-    this.operator = operator;
-    this.argument = argument;
-    this.argument.parent = this;
-    this.prefix = true;
+class UnaryExpression extends Node {
+    constructor(operator, argument) {
+        super();
+        this.type = "UnaryExpression";
+        this.operator = operator;
+        this.argument = argument;
+        this.argument.parent = this;
+        this.prefix = true;
+    }
+
+    codegen() {
+        if (!super.codegen()) return;
+        this.argument = this.argument.codegen();
+        return this;
+    }
 }
 
-UnaryExpression.prototype = Object.create(Node);
-
-UnaryExpression.prototype.codegen = function () {
-    if (!Node.prototype.codegen.call(this)) return;
-    this.argument = this.argument.codegen();
-    return this;
-};
-
-exports.UnaryExpression = UnaryExpression;
+module.exports.UnaryExpression = UnaryExpression;

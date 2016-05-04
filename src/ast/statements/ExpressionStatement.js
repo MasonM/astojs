@@ -1,19 +1,20 @@
+'use strict';
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function ExpressionStatement(expression) {
-    Node.call(this);
-    this.type = "ExpressionStatement";
-    this.expression = expression;
-    this.expression.parent = this;
+class ExpressionStatement extends Node {
+    constructor(expression) {
+        super();
+        this.type = "ExpressionStatement";
+        this.expression = expression;
+        this.expression.parent = this;
+    }
+
+    codegen() {
+        if (!super.codegen()) return;
+        this.expression = this.expression.codegen();
+        return this;
+    }
 }
 
-ExpressionStatement.prototype = Object.create(Node);
-
-ExpressionStatement.prototype.codegen = function () {
-    if (!Node.prototype.codegen.call(this)) return;
-    this.expression = this.expression.codegen();
-    return this;
-};
-
-exports.ExpressionStatement = ExpressionStatement;
+module.exports.ExpressionStatement = ExpressionStatement;

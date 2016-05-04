@@ -1,25 +1,26 @@
+'use strict';
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function LogicalExpression(left, operator, right) {
-    Node.call(this);
-    this.type = 'LogicalExpression';
-    this.operator = operator;
+class LogicalExpression extends Node {
+    constructor(left, operator, right) {
+        super();
+        this.type = 'LogicalExpression';
+        this.operator = operator;
 
-    this.left = left;
-    this.left.parent = this;
+        this.left = left;
+        this.left.parent = this;
 
-    this.right = right;
-    this.right.parent = this;
+        this.right = right;
+        this.right.parent = this;
+    }
+
+    codegen() {
+        if (!super.codegen()) return;
+        this.left = this.left.codegen();
+        this.right = this.right.codegen();
+        return this;
+    }
 }
 
-LogicalExpression.prototype = Object.create(Node);
-
-LogicalExpression.prototype.codegen = function () {
-    if (!Node.prototype.codegen.call(this)) return;
-    this.left = this.left.codegen();
-    this.right = this.right.codegen();
-    return this;
-};
-
-exports.LogicalExpression = LogicalExpression;
+module.exports.LogicalExpression = LogicalExpression;

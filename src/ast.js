@@ -1,3 +1,4 @@
+'use strict';
 var appRoot = require('app-root-path'),
     nodes = [
     'LabelledParameter',

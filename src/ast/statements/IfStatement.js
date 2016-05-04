@@ -1,27 +1,28 @@
+'use strict';
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node;
 
-function IfStatement(test, consequent, alternate) {
-    Node.call(this);
-    this.type = "IfStatement";
-    this.test = test;
-    this.test.parent = this;
+class IfStatement extends Node {
+    constructor(test, consequent, alternate) {
+        super();
+        this.type = "IfStatement";
+        this.test = test;
+        this.test.parent = this;
 
-    this.consequent = consequent;
-    this.consequent.parent = this;
+        this.consequent = consequent;
+        this.consequent.parent = this;
 
-    this.alternate = alternate;
-    if (this.alternate) this.alternate.parent = this;
+        this.alternate = alternate;
+        if (this.alternate) this.alternate.parent = this;
+    }
+
+    codegen() {
+        if (!super.codegen()) return;
+        this.test = this.test.codegen();
+        this.consequent = this.consequent.blockWrap().codegen();
+        if (this.alternate) this.alternate = this.alternate.blockWrap().codegen();
+        return this;
+    }
 }
 
-IfStatement.prototype = Object.create(Node);
-
-IfStatement.prototype.codegen = function () {
-    if (!Node.prototype.codegen.call(this)) return;
-    this.test = this.test.codegen();
-    this.consequent = this.consequent.blockWrap().codegen();
-    if (this.alternate) this.alternate = this.alternate.blockWrap().codegen();
-    return this;
-};
-
-exports.IfStatement = IfStatement;
+module.exports.IfStatement = IfStatement;

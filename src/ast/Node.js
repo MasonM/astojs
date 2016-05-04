@@ -1,32 +1,42 @@
+'use strict';
+
 var appRoot = require('app-root-path');
 
-function Node() {
-    this.codeGenerated = false;
-    this.definedIdentifiers = [];
+class Node {
+    constructor() {
+        this.codeGenerated = false;
+        this.definedIdentifiers = [];
+        Object.defineProperty(this, 'parent', {
+            value: null,
+            writable: true,
+            configurable: true,
+            enumerable: false
+        });
+    }
 
-    Object.defineProperty(this, 'parent', {
-        value: null,
-        writable: true,
-        configurable: true,
-        enumerable: false
-    });
-
-    var self = this;
-    this.blockWrap = function() {
-        if (self.type == 'BlockStatement') {
-            return self;
+    blockWrap() {
+        if (this.type == 'BlockStatement') {
+            return this;
         }
 
-        var myParent = self.parent;
+        var myParent = this.parent;
         var blockStatement = require(appRoot + '/src/ast/statements/BlockStatement');
-
-        var block = new blockStatement.BlockStatement([self]);
+        var block = new blockStatement.BlockStatement([this]);
         block.parent = myParent;
 
         return block;
-    };
+    }
 
-    this.assignObjectProperty = function(name, value) {
+    codegen() {
+        if (this.codeGenerated) {
+            return false;
+        }
+
+        this.codeGenerated = true;
+        return this;
+    }
+
+    static assignObjectProperty(name, value) {
         return {
             "type": "ExpressionStatement",
             "expression": {
@@ -46,13 +56,5 @@ function Node() {
     }
 }
 
-Node.prototype.codegen = function() {
-    if (this.codeGenerated) {
-        return false;
-    }
 
-    this.codeGenerated = true;
-    return true;
-};
-
-exports.Node = Node;
+module.exports.Node = Node;
