@@ -15,8 +15,7 @@ class RepeatListStatement extends Node {
         this.body.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.type = "ForInStatement";
         this.left = this.loopVariable;
         this.right = this.list;

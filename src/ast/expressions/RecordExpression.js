@@ -13,8 +13,7 @@ class RecordExpression extends Node {
         _(properties).each(function(property) { property.parent = self; });
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.type = 'NewExpression';
         this.callee = {
             "type": "Identifier",
@@ -25,7 +24,7 @@ class RecordExpression extends Node {
         }
         Object.defineProperty(this, 'arguments', {
             value: [{ "type": "ObjectExpression", "properties": this.properties }],
-        enumerable: true
+            enumerable: true
         });
         return this;
     }

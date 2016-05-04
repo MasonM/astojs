@@ -25,8 +25,7 @@ class SubroutinePositionalDeclarationStatement extends Node {
         });
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.type = 'FunctionDeclaration';
         this.id = this.id.codegen();
         this.body = this.body.codegen();

@@ -11,8 +11,7 @@ class RepeatNumTimesStatement extends Node {
         this.body.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.type = "ForStatement";
         var id = {
             "type": "Identifier",

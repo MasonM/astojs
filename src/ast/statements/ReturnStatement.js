@@ -10,8 +10,7 @@ class ReturnStatement extends Node {
         if (argument) this.argument.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         if (this.argument) this.argument = this.argument.codegen();
         return this;
     }

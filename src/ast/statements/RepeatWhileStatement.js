@@ -13,8 +13,7 @@ class RepeatWhileStatement extends Node {
         this.body.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.type = "WhileStatement";
         this.body = this.body.blockWrap().codegen();
         return this;

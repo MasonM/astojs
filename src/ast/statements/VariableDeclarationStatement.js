@@ -14,8 +14,7 @@ class VariableDeclarationStatement extends Node {
         if (init) this.init.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.id = this.id.codegen();
         if (this.init) this.init = this.init.codegen();
 

@@ -33,7 +33,7 @@ class Node {
         }
 
         this.codeGenerated = true;
-        return this;
+        return this._codegen ? this._codegen() : this;
     }
 
     static assignObjectProperty(name, value) {

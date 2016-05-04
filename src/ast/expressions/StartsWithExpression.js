@@ -14,8 +14,7 @@ class StartsWithExpression extends Node {
         this.right.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.left = this.left.codegen();
         this.right = this.right.codegen();
         this.type = 'CallExpression';

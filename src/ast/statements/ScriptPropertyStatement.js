@@ -12,8 +12,7 @@ class ScriptPropertyStatement extends Node {
         this.initialValue.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.type = "VariableDeclarator";
         this.id = this.label.codegen();
         this.init = this.initialValue.codegen();

@@ -18,8 +18,7 @@ class RecordProperty extends Node {
         this.value.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.key = this.key.codegen(false);
         this.value = this.value.codegen(this.parent.type != "ObjectPattern");
         return this;

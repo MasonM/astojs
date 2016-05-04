@@ -19,9 +19,7 @@ class BlockStatement extends Node {
         });
     }
 
-    codegen() {
-        if (!super.codegen()) return;
-
+    _codegen() {
         for (var i = 0; i < this.body.length;) {
             var statement = this.body[i];
 

@@ -15,8 +15,7 @@ class RepeatRangeStatement extends Node {
         this.body.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.type = "ForStatement";
         this.init = {
             "type": "VariableDeclaration",

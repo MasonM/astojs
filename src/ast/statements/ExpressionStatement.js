@@ -10,8 +10,7 @@ class ExpressionStatement extends Node {
         this.expression.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.expression = this.expression.codegen();
         return this;
     }

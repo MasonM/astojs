@@ -17,8 +17,7 @@ class BinaryExpression extends Node {
         this.right.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         var leftType = this.left.type,
             rightType = this.right.type;
         this.left = this.left.codegen();

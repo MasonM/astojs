@@ -12,9 +12,7 @@ class StringLiteral extends Node {
         this.column = column;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
-
+    _codegen() {
         var elements = [];
         _(this.chars).each(function(value) {
             var lastElement;
@@ -48,7 +46,7 @@ class StringLiteral extends Node {
         if (elements.length === 0) {
             return {
                 "type": "Literal",
-                    "value": ""
+                "value": ""
             };
         } else if (elements.length === 1) {
             return elements[0];

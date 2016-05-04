@@ -16,8 +16,7 @@ class IfStatement extends Node {
         if (this.alternate) this.alternate.parent = this;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.test = this.test.codegen();
         this.consequent = this.consequent.blockWrap().codegen();
         if (this.alternate) this.alternate = this.alternate.blockWrap().codegen();

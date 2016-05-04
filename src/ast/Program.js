@@ -16,8 +16,7 @@ class Program extends Node {
         });
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         for (var i = 0; i < this.body.length;) {
             var statement = this.body[i];
 
@@ -30,7 +29,6 @@ class Program extends Node {
                 this.body.splice(i, 1);
             }
         }
-
         return this;
     }
 }

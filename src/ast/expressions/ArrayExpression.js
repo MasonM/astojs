@@ -13,8 +13,7 @@ class ArrayExpression extends Node {
         _(elements).each(function(element) { if (element) element.parent = self; });
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         for (var i = 0; i < this.elements.length; i++) {
             if (this.elements[i]) this.elements[i] = this.elements[i].codegen();
         }

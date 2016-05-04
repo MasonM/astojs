@@ -19,8 +19,7 @@ class PositionalCallExpression extends Node {
         _(args).each(function(arg) { if (arg) arg.parent = self; });
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.type = "CallExpression";
         this.callee = this.callee.codegen();
         for (var i = 0; i < this.arguments.length; i++) {

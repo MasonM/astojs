@@ -22,8 +22,7 @@ class ScriptDeclarationStatement extends Node {
         _(handlers).each(function(h) { h.parent = self; });
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.type = 'FunctionDeclaration';
         this.defaults = [];
         this.rest = null;

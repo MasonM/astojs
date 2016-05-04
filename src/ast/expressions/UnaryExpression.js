@@ -12,8 +12,7 @@ class UnaryExpression extends Node {
         this.prefix = true;
     }
 
-    codegen() {
-        if (!super.codegen()) return;
+    _codegen() {
         this.argument = this.argument.codegen();
         return this;
     }
