@@ -14,11 +14,11 @@ var should = require('should'),
             escapeless: true
         }
     };
-    
+
 function generateTest(code, expectation) {
-  return function () {
-    should(compiler.compile(parser, code, compilerOptions)).be.exactly(expectation);
-  };
+    return function () {
+        should(compiler.compile(parser, code, compilerOptions)).be.exactly(expectation);
+    };
 }
 
 describe('comments:', function () {

@@ -1,16 +1,6 @@
 {
   var appRoot = require('app-root-path'),
     ast = require(appRoot + '/src/ast');
-  
-  function filledArray(count, value) {
-    var result = new Array(count), i;
-
-    for (i = 0; i < count; i++) {
-      result[i] = value;
-    }
-
-    return result;
-  }
 
   function extractOptional(optional, index) {
     return optional ? optional[index] : null;
@@ -121,18 +111,18 @@ Comment
 
 MultiLineComment
   = MultiLineCommentStart value:((!(MultiLineCommentEnd / MultiLineCommentStart) SourceCharacter) / MultiLineComment)* MultiLineCommentEnd {
-    return insertLocationData(new ast.Comment('Block', optionalList(extractOptional(value, 3))), text(), location());
-  }
+      return insertLocationData(new ast.Comment('Block', optionalList(extractOptional(value, 3))), text(), location());
+    }
 
 MultiLineCommentNoLineTerminator
   = MultiLineCommentStart value:((!(MultiLineCommentEnd / MultiLineCommentStart / LineTerminator) SourceCharacter) / MultiLineCommentNoLineTerminator)* MultiLineCommentEnd {
-    return insertLocationData(new ast.Comment('Block', optionalList(extractOptional(value, 4))), text(), location());
-  }
+      return insertLocationData(new ast.Comment('Block', optionalList(extractOptional(value, 4))), text(), location());
+    }
 
 SingleLineComment
   = SingleLineCommentStart value:(!LineTerminator SourceCharacter)* {
-    return insertLocationData(new ast.Comment('Line', extractList(value, 1).join('')), text(), location());
-  }
+      return insertLocationData(new ast.Comment('Line', extractList(value, 1).join('')), text(), location());
+    }
 
 Identifier
   = !ReservedWord name:IdentifierName { return name; }
@@ -329,19 +319,19 @@ StringLiteral "string"
 
 DoubleStringCharacter
   = !('"' / "\\" / LineTerminator) SourceCharacter { return text(); }
-  / "\\" sequence:EscapeSequence { return sequence; }
-  / LineContinuation
-  / LineTerminator __ {
-    return insertLocationData(new ast.StringLiteral.NewLine(text()), text(), location());
-  }
+    / "\\" sequence:EscapeSequence { return sequence; }
+    / LineContinuation
+    / LineTerminator __ {
+      return insertLocationData(new ast.StringLiteral.NewLine(text()), text(), location());
+    }
 
 SingleStringCharacter
   = !("'" / "\\" / LineTerminator) SourceCharacter { return text(); }
   / "\\" sequence:EscapeSequence { return sequence; }
   / LineContinuation
   / LineTerminator __ {
-    return insertLocationData(new ast.StringLiteral.NewLine(text()), text(), location());
-  }
+      return insertLocationData(new ast.StringLiteral.NewLine(text()), text(), location());
+    }
 
 LineContinuation
   = "\\" LineTerminatorSequence { return ""; }
@@ -578,17 +568,17 @@ PositionalParameterList
 DirectLabelledParameter
   = label:("of" / "in") __ id:Identifier {
       return insertLocationData(new ast.LabelledParameter(label, id), text(), location());
-  }
+    }
 
 ASLabelledParameterList
   = first:ASLabelledParameter rest:(__ ASLabelledParameter)* {
       return buildList(first, rest, 1);
-  }
+    }
 
 ASLabelledParameter
   = label:ASLabel _ id:Identifier {
       return insertLocationData(new ast.LabelledParameter(label, id), text(), location());
-  }
+    }
 
 ASLabel
   = "about"
@@ -623,8 +613,8 @@ UserLabelledParameterList
 
 UserLabelledParameter
   = label:Identifier __ ":" __ id:Identifier{
-    return insertLocationData(new ast.Parameter(label, id), text(), location());
-  }
+      return insertLocationData(new ast.Parameter(label, id), text(), location());
+    }
 
 ScriptDeclarationStatement
   = ScriptToken __ id:Identifier
@@ -645,7 +635,7 @@ ScriptPropertyStatementList
 ScriptPropertyStatement
   = PropertyToken __ label:Identifier __ ":" __ initialValue:Expression __ {
       return insertLocationData(new ast.ScriptPropertyStatement(label, initialValue), text(), location());
-  }
+    }
 
 IfStatement
   = IfToken __ test:Expression __ ThenToken? __
@@ -707,10 +697,10 @@ RepeatStatement
     body:Block __
     EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatRangeStatement(loopVariable, start, end, extractOptional(step, 2), body), text(), location());
-  }
+    }
   / RepeatToken __ WithToken __ loopVariable:Identifier __ "in" __ list:Expression __ body:Block __ EndToken _ RepeatToken? {
         return insertLocationData(new ast.RepeatListStatement(loopVariable, list, body), text(), location());
-  }
+    }
 
 LogicalORExpression
   = first:LogicalANDExpression
@@ -881,12 +871,12 @@ PositionalCallExpression
 Arguments
   = "(" __ args:(ArgumentList __)? ")" {
       return optionalList(extractOptional(args, 0));
-  }
+    }
 
 ArgumentList
   = first:Expression rest:(__ "," __ Expression)* {
       return buildList(first, rest, 3);
-  }
+    }
 
 PrimaryExpression
   = ThisExpression
@@ -894,7 +884,6 @@ PrimaryExpression
   / Literal
   / ArrayLiteral
   / RecordLiteral
-  / "(" __ expression:Expression __ ")" { return expression; }
 
 ThisExpression
   = ThisToken {
@@ -920,8 +909,8 @@ ElementList
     
 ArrayPattern
   = "{" __ "}" { 
-       return  new ast.ArrayPattern([]); 
-     }
+      return  new ast.ArrayPattern([]); 
+    }
   / "{" __ elements:PatternElementList __ "}" {
       return insertLocationData(new ast.ArrayPattern(elements), text(), location());
     }
