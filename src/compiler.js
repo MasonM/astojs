@@ -1,12 +1,14 @@
 'use strict';
 var escodegen = require('escodegen');
 
+var util = require('util');
 module.exports.compile = function (parser, sourceCode, options) {
-    var parsed = parser.parse(sourceCode);
+    var parsedAst = parser.parse(sourceCode);
+    if (!parsedAst) return null;
 
-    if (!parsed) return null;
+    var parsedComments = parser.parse(sourceCode, { startRule: "StartComments" });
+    var javascriptAst = parsedAst.codegen();
+    javascriptAst = escodegen.attachComments(javascriptAst, parsedComments, javascriptAst.body); 
 
-    var output = escodegen.generate(parsed.codegen(), options);
-
-    return output;
+    return escodegen.generate(javascriptAst, options);
 }

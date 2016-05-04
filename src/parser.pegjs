@@ -65,10 +65,10 @@
       },
       "end": {
         "line": location.end.line + lines.length - 1,
-        "column": (lines.length === 1 ? (location.end.column - 1) : 0) + 
-          lines[lines.length - 1].length
+        "column": (lines.length === 1 ? (location.end.column - 1) : 0) + lines[lines.length - 1].length
       }
     };
+    node.range =  [location.start.offset, location.end.offset];
     
     return node;
   }
@@ -77,6 +77,10 @@
 Start
   = __ program:Program __ { return program; }
   
+StartComments
+  = comment:(. Comment?)* { return extractList(comment, 1).filter(elem => elem !== null); }
+
+
 /* ----- A.1 Lexical Grammar ----- */
 
 SourceCharacter
@@ -101,18 +105,34 @@ LineTerminatorSequence "end of line"
   / "\u2028"
   / "\u2029"
 
-Comment "comment"
+SingleLineCommentStart
+  = "--"
+  / "#"
+
+MultiLineCommentStart
+  = "(*"
+
+MultiLineCommentEnd
+  = "*)"
+
+Comment
   = MultiLineComment
   / SingleLineComment
 
 MultiLineComment
-  = "/*" (!"*/" SourceCharacter)* "*/"
+  = MultiLineCommentStart value:((!(MultiLineCommentEnd / MultiLineCommentStart) SourceCharacter) / MultiLineComment)* MultiLineCommentEnd {
+    return insertLocationData(new ast.Comment('Block', optionalList(extractOptional(value, 3))), text(), location());
+  }
 
 MultiLineCommentNoLineTerminator
-  = "/*" (!("*/" / LineTerminator) SourceCharacter)* "*/"
+  = MultiLineCommentStart value:((!(MultiLineCommentEnd / MultiLineCommentStart / LineTerminator) SourceCharacter) / MultiLineCommentNoLineTerminator)* MultiLineCommentEnd {
+    return insertLocationData(new ast.Comment('Block', optionalList(extractOptional(value, 4))), text(), location());
+  }
 
 SingleLineComment
-  = "//" (!LineTerminator SourceCharacter)*
+  = SingleLineCommentStart value:(!LineTerminator SourceCharacter)* {
+    return insertLocationData(new ast.Comment('Line', extractList(value, 1).join('')), text(), location());
+  }
 
 Identifier
   = !ReservedWord name:IdentifierName { return name; }
@@ -311,13 +331,17 @@ DoubleStringCharacter
   = !('"' / "\\" / LineTerminator) SourceCharacter { return text(); }
   / "\\" sequence:EscapeSequence { return sequence; }
   / LineContinuation
-  / LineTerminator __ { return new ast.StringLiteral.NewLine(text()); }
+  / LineTerminator __ {
+    return insertLocationData(new ast.StringLiteral.NewLine(text()), text(), location());
+  }
 
 SingleStringCharacter
   = !("'" / "\\" / LineTerminator) SourceCharacter { return text(); }
   / "\\" sequence:EscapeSequence { return sequence; }
   / LineContinuation
-  / LineTerminator __ { return new ast.StringLiteral.NewLine(text()); }
+  / LineTerminator __ {
+    return insertLocationData(new ast.StringLiteral.NewLine(text()), text(), location());
+  }
 
 LineContinuation
   = "\\" LineTerminatorSequence { return ""; }
@@ -882,11 +906,11 @@ Expression
       
 ArrayLiteral
   = "{" __ "}" { 
-       return new ast.ArrayExpression([]); 
-     }
+    return insertLocationDatan(new ast.ArrayExpression([]), text(), location()); 
+  }
   / "{" __ elements:ElementList __ "}" {
-      return insertLocationData(new ast.ArrayExpression(elements), text(), location());
-    }
+    return insertLocationData(new ast.ArrayExpression(elements), text(), location());
+  }
 
 ElementList
   = first:Expression rest:(

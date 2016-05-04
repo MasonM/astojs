@@ -6,6 +6,7 @@ var should = require('should'),
     parser = module.require('../src/parser'),
     util = require('util'),
     compilerOptions = {
+        comment: true,
         format: {
             quotes: 'double',
             compact: true,
@@ -19,6 +20,10 @@ function generateTest(code, expectation) {
     should(compiler.compile(parser, code, compilerOptions)).be.exactly(expectation);
   };
 }
+
+describe('comments:', function () {
+    it('single EOL comment with --', generateTest('"foo" -- EOL comment', '"foo"; // EOL comment'));
+});
 
 describe('literals:', function () {
     it('true boolean',   generateTest('true', 'true;'));

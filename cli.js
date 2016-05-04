@@ -44,8 +44,8 @@ opts.files.forEach(function (fileName, fileIndex) {
         var parser;
         if (opts.debug) {
             var grammar = fs.readFileSync('./src/parser.pegjs', 'utf8');
-            var options = { trace: true }
-            parser = pegjs.buildParser(grammar);
+            var options = { trace: true };
+            parser = pegjs.buildParser(grammar, { allowedStartRules: ['Start', 'StartComments'] });
         } else {
             parser = module.require('./src/parser');
         }

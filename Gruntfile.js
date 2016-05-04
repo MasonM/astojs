@@ -38,6 +38,7 @@
                     src: "src/parser.pegjs",
                     dest: "src/parser.js",
                     options: {
+                        allowedStartRules: ['Start', 'StartComments'],
                         trace: false
                     }
                 }

@@ -46,9 +46,11 @@ class StringLiteral extends Node {
         if (elements.length === 0) {
             return {
                 "type": "Literal",
-                "value": ""
+                "value": "",
+                range: this.range
             };
         } else if (elements.length === 1) {
+            elements[0].range = this.range;
             return elements[0];
         }
 

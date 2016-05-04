@@ -1,6 +1,7 @@
 'use strict';
 var appRoot = require('app-root-path'),
     nodes = [
+    'Comment',
     'LabelledParameter',
     'Program',
     'RecordProperty',
