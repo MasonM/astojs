@@ -50,22 +50,24 @@
     var lines = text.split("\n");
     node.loc = {
       "start": {
-        "line": location.start.line,
-        "column": location.start.column - 1
+        "line": location.start.line - 1,
+        "column": location.start.column - 1,
+        "offset": location.start.offset
       },
       "end": {
-        "line": location.end.line + lines.length - 1,
-        "column": (lines.length === 1 ? (location.end.column - 1) : 0) + lines[lines.length - 1].length
+        "line": location.end.line - 1,
+        "column": location.end.column - 1,
+        "offset": location.end.offset
       }
     };
     node.range =  [location.start.offset, location.end.offset];
-    
+
     return node;
   }
 }
 
 Start
-  = __ program:Program __ { return program; }
+  = program:Program { return program; }
   
 StartComments
   = comments:(Comment / . { return null; })* { return comments.filter(elem => elem !== null); }
@@ -111,12 +113,12 @@ Comment
 
 MultiLineComment
   = MultiLineCommentStart value:((!(MultiLineCommentEnd / MultiLineCommentStart) SourceCharacter) / MultiLineComment)* MultiLineCommentEnd {
-      return insertLocationData(new ast.Comment('Block', optionalList(extractOptional(value, 3))), text(), location());
+      return insertLocationData(new ast.Comment('Block', extractList(value, 1).join('')), text(), location());
     }
 
 MultiLineCommentNoLineTerminator
   = MultiLineCommentStart value:((!(MultiLineCommentEnd / MultiLineCommentStart / LineTerminator) SourceCharacter) / MultiLineCommentNoLineTerminator)* MultiLineCommentEnd {
-      return insertLocationData(new ast.Comment('Block', optionalList(extractOptional(value, 4))), text(), location());
+      return insertLocationData(new ast.Comment('Block', extractList(value, 1).join('')), text(), location());
     }
 
 SingleLineComment
@@ -498,7 +500,7 @@ EOF
   = !.
 
 Program
-  = body:StatementList? {
+  = __ body:StatementList? __ EOF {
       return insertLocationData(new ast.Program(optionalList(body)), text(), location());
     }
    
