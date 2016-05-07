@@ -6,48 +6,31 @@
     return optional ? optional[index] : null;
   }
 
+  function optionalList(value) {
+    return value !== null ? value : [];
+  }
+
   function extractList(list, index) {
-    var result = new Array(list.length), i;
-
-    for (i = 0; i < list.length; i++) {
-      result[i] = list[i][index];
-    }
-
-    return result;
+    return list.map(subList => subList[index]);
   }
 
   function buildList(first, rest, index) {
     return [first].concat(extractList(rest, index));
   }
 
-  function buildTree(first, rest, builder) {
-    var result = first, i;
-
-    for (i = 0; i < rest.length; i++) {
-      result = builder(result, rest[i]);
-    }
-
-    return result;
+  function buildTree(first, rest, nodeFactory) {
+    return rest.reduce((result, element) => {
+      return insertLocationData(nodeFactory(result, element), text(), location());
+    }, first);
   }
 
   function buildBinaryExpression(first, rest) {
-    return buildTree(first, rest, function(result, element) {
-      return insertLocationData(new ast.BinaryExpression(result, element[1], element[3]), text(), location());
+    return buildTree(first, rest, (result, element) => {
+      return new ast.BinaryExpression(result, element[1], element[3]);
     });
-  }
-  
-  function buildLogicalExpression(first, rest) {
-    return buildTree(first, rest, function(result, element) {
-      return insertLocationData(new ast.LogicalExpression(result, element[1], element[3]), text(), location());
-    });
-  }
-
-  function optionalList(value) {
-    return value !== null ? value : [];
   }
   
   function insertLocationData(node, text, location) {
-    var lines = text.split("\n");
     node.loc = {
       "start": {
         "line": location.start.line - 1,
@@ -61,7 +44,6 @@
       }
     };
     node.range =  [location.start.offset, location.end.offset];
-
     return node;
   }
 }
@@ -712,16 +694,22 @@ RepeatStatement
 
 LogicalORExpression
   = first:LogicalANDExpression
-    rest:(__ LogicalOROperator __ LogicalANDExpression)*
-    { return buildLogicalExpression(first, rest); }
+    rest:(__ LogicalOROperator __ LogicalANDExpression)* {
+      return buildTree(first, rest, (result, element) => {
+        return new ast.LogicalExpression(result, element[1], element[3]);
+      });
+    }
     
 LogicalOROperator
   = OrToken { return "||"; }
   
 LogicalANDExpression
   = first:EqualityExpression
-    rest:(__ LogicalANDOperator __ EqualityExpression)*
-    { return buildLogicalExpression(first, rest); }
+    rest:(__ LogicalANDOperator __ EqualityExpression)* {
+      return buildTree(first, rest, (result, element) => {
+        return new ast.LogicalExpression(result, element[1], element[3]);
+      });
+    }
     
 LogicalANDOperator
   = AndToken { return "&&"; }
@@ -808,16 +796,16 @@ RelationalOperator
 StartsWithExpression
   = left:EndsWithExpression
     rest:(__ StartsWithToken __ EndsWithExpression)* {
-      return buildTree(left, rest, function(result, element) {
-        return insertLocationData(new ast.StartsWithExpression(result, element[3]), text(), location());
+      return buildTree(left, rest, (result, element) => {
+        return new ast.StartsWithExpression(result, element[3]);
       });
     }
 
 EndsWithExpression
   = left:ConcatenativeExpression
     rest:(__ EndsWithToken __ ConcatenativeExpression)* {
-      return buildTree(left, rest, function(result, element) {
-        return insertLocationData(new ast.EndsWithExpression(result, element[3]), text(), location());
+      return buildTree(left, rest, (result, element)  => {
+        return new ast.EndsWithExpression(result, element[3]);
       });
     }
 

@@ -31,6 +31,7 @@ class BinaryExpression extends Node {
                 this.callee = {
                     "type": "MemberExpression",
                     "computed": false,
+                    "range": this.range,
                     "object": {
                         "type": "Identifier",
                         "name": "Math"
@@ -43,9 +44,10 @@ class BinaryExpression extends Node {
                 Object.defineProperty(this, 'arguments', {
                     value: [{
                         "type": "BinaryExpression",
-                    "operator": "/",
-                    "left": this.left,
-                    "right": this.right
+                        "operator": "/",
+                        "range": this.range,
+                        "left": this.left,
+                        "right": this.right
                     }],
                     enumerable: true
                 });
@@ -118,6 +120,7 @@ class BinaryExpression extends Node {
                     "type": "MemberExpression",
                     "computed": false,
                     "object": this.left,
+                    "range": this.range,
                     "property": {
                         "type": "Identifier",
                         "name": "contains"
@@ -134,6 +137,7 @@ class BinaryExpression extends Node {
                     "type": "MemberExpression",
                     "computed": false,
                     "object": this.right,
+                    "range": this.range,
                     "property": {
                         "type": "Identifier",
                         "name": "contains"
@@ -153,6 +157,7 @@ class BinaryExpression extends Node {
                     "callee": {
                         "type": "MemberExpression",
                         "computed": false,
+                        "range": this.range,
                         "object": this.left,
                         "property": {
                             "type": "Identifier",
@@ -174,6 +179,7 @@ class BinaryExpression extends Node {
                         "type": "MemberExpression",
                         "computed": false,
                         "object": this.right,
+                        "range": this.range,
                         "property": {
                             "type": "Identifier",
                             "name": "contains",
@@ -187,6 +193,7 @@ class BinaryExpression extends Node {
                 this.callee = {
                     "type": "MemberExpression",
                     "computed": false,
+                    "range": this.range,
                     "object": {
                         "type": "Identifier",
                         "name": "Math"
@@ -210,6 +217,7 @@ class BinaryExpression extends Node {
                         "type": "MemberExpression",
                         "computed": false,
                         "object": this.left,
+                        "range": this.range,
                         "property": {
                             "type": "Identifier",
                             "name": "concat"

@@ -252,17 +252,23 @@ describe('labelled subroutines:', function () {
         'function findMininum(args){var numList=args["of"];numList}'));
 });
 
+describe('properties:', function () {
+    it('single property', generateTest("prop name : \"bar\"\n", 'this.name="bar"'));
+
+    it('multiple properties', generateTest(
+        "prop name : \"bar\"\n" +
+        "property bam : \"baz\"\n" +
+        "prop foo : \"bar\"\n",
+
+        'this.name="bar";this.bam="baz";this.foo="bar"'));
+});
+
 describe('script objects:', function () {
-    it('top-level properties', generateTest(
-        "property name : \"bar\"\n" +
-        "property bam : \"baz\"\n",
-
-        'this.name="bar";this.bam="baz"'));
-
     it('minimal script object', generateTest(
         'script helloWorld end', 
 
         'function helloWorld(){}'));
+
     it('script object with a property', generateTest(
         "script helloWorld \n"+
             "property foo : \"bar\"\n" +
@@ -293,7 +299,7 @@ describe('script objects:', function () {
 
     it('script object with a handler and a property', generateTest(
        "script helloWorld\n" +
-            "property HowManyTimes:0\n" +
+            "prop HowManyTimes:0\n" +
             "on sayHello(someone)\n" +
             "   return 'Hello'\n" +
             "end\n" +
