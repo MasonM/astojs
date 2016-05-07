@@ -884,7 +884,7 @@ PrimaryExpression
   = ThisExpression
   / Identifier
   / Literal
-  / ArrayLiteral
+  / ListLiteral
   / RecordLiteral
 
 ThisExpression
@@ -895,38 +895,20 @@ ThisExpression
 Expression
   = LogicalORExpression
       
-ArrayLiteral
+ListLiteral
   = "{" __ "}" { 
-    return insertLocationDatan(new ast.ArrayExpression([]), text(), location()); 
+    return insertLocationDatan(new ast.ListExpression([]), text(), location()); 
   }
-  / "{" __ elements:ElementList __ "}" {
-    return insertLocationData(new ast.ArrayExpression(elements), text(), location());
+  / "{" __ elements:ItemList __ "}" {
+    return insertLocationData(new ast.ListExpression(elements), text(), location());
   }
 
-ElementList
+ItemList
   = first:Expression rest:(
       __ "," __ element:Expression { return element; }
     )*
     { return Array.prototype.concat.apply(first, rest); }
     
-ArrayPattern
-  = "{" __ "}" { 
-      return  new ast.ArrayPattern([]); 
-    }
-  / "{" __ elements:PatternElementList __ "}" {
-      return insertLocationData(new ast.ArrayPattern(elements), text(), location());
-    }
-
-PatternElementList
-  = first:PatternElement rest:(
-      __ "," __ element:PatternElement { return element; }
-    )*
-    { return Array.prototype.concat.apply(first, rest); }
-
-PatternElement
-  = Identifier
-  / ArrayPattern
-
 RecordLiteral
   = "{" __ properties:RecordPropertyNameAndValueList __ "}" {
        return insertLocationData(new ast.RecordExpression(properties), text(), location());

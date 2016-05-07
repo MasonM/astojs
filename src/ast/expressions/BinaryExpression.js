@@ -2,7 +2,7 @@
 var appRoot = require('app-root-path'),
     Node = require(appRoot + "/src/ast/Node").Node,
     StringLiteral = require(appRoot + "/src/ast/literals/StringLiteral").StringLiteral,
-    ArrayExpression = require(appRoot + "/src/ast/expressions/ArrayExpression").ArrayExpression;
+    ListExpression = require(appRoot + "/src/ast/expressions/ListExpression").ListExpression;
 
 class BinaryExpression extends Node {
     constructor(left, operator, right) {
