@@ -1,12 +1,16 @@
 'use strict';
-var escodegen = require('escodegen');
+
+let escodegen = require('escodegen'), pegUtil = require('pegjs-util')
 
 module.exports.compile = function (parser, sourceCode, options) {
-    var applescriptAst = parser.parse(sourceCode);
-    if (!applescriptAst) return null;
+    let applescriptParseResult = pegUtil.parse(parser, sourceCode);
+    if (applescriptParseResult.error) {
+        console.log(pegUtil.errorMessage(applescriptParseResult.error))
+        return null;
+    }
 
-    var javascriptAst = applescriptAst.codegen();
-    var comments = parser.parse(sourceCode, { startRule: "StartComments" });
+    let comments = pegUtil.parse(parse, sourceCode, { startRule: "StartComments" });
+    let javascriptAst = applescriptParseResult.ast.codegen();
     javascriptAst = escodegen.attachComments(javascriptAst, comments, javascriptAst.body); 
 
     return escodegen.generate(javascriptAst, options);
