@@ -9,7 +9,7 @@ module.exports.compile = function (parser, sourceCode, options) {
         return null;
     }
 
-    let comments = pegUtil.parse(parse, sourceCode, { startRule: "StartComments" });
+    let comments = parser.parse(sourceCode, { startRule: "StartComments" });
     let javascriptAst = applescriptParseResult.ast.codegen();
     javascriptAst = escodegen.attachComments(javascriptAst, comments, javascriptAst.body); 
 
