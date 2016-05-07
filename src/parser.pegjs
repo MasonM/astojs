@@ -258,6 +258,7 @@ Keyword
   / DefaultToken
   / NullToken
   / UndefinedToken
+  / AsToken
 
 Literal
   = NullLiteral
@@ -377,116 +378,121 @@ Zs = [\u0020\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]
 
 /* Tokens */
 
-AndToken          = "and"           !IdentifierPart
-OrToken           = "or"            !IdentifierPart
-ReturnToken       = "return"        !IdentifierPart
-SetToken          = "set"           !IdentifierPart
-IfToken           = "if"            !IdentifierPart
-TheToken          = "the"           !IdentifierPart
-ThenToken         = "then"          !IdentifierPart
-ElseToken         = "else"          !IdentifierPart
-EndToken          = "end"           !IdentifierPart
-ForToken          = "for"           !IdentifierPart
-TrueToken         = "true"          !IdentifierPart
-FalseToken        = "false"         !IdentifierPart
-NullToken         = "null"          !IdentifierPart
-MissingValueToken = "missing value" !IdentifierPart
-UseToken          = "use"           !IdentifierPart
-ThisToken         = "this"          !IdentifierPart
-ThrowToken        = "throw"         !IdentifierPart
-BreakToken        = "break"         !IdentifierPart
-ContinueToken     = "continue"      !IdentifierPart
-WhileToken        = "while"         !IdentifierPart
-RepeatToken       = "repeat"        !IdentifierPart
-TimesToken        = "times"         !IdentifierPart
-UntilToken        = "until"         !IdentifierPart
-InToken           = "in"            !IdentifierPart
-OfToken           = "of"            !IdentifierPart
-TryToken          = "try"           !IdentifierPart
-OnToken           = "on"            !IdentifierPart
-ToToken           = "to"            !IdentifierPart
-CatchToken        = "catch"         !IdentifierPart
-DefaultToken      = "default"       !IdentifierPart
-NotToken          = "not"           !IdentifierPart
-FromToken         = "from"          !IdentifierPart
-WithToken         = "with"          !IdentifierPart
-AsToken           = "as"            !IdentifierPart
-ByToken           = "by"            !IdentifierPart
-DoToken           = "do"            !IdentifierPart
-UndefinedToken    = "undefined"     !IdentifierPart
-DivToken          = "div"           !IdentifierPart
-ModToken          = "mod"           !IdentifierPart
-CopyToken         = "copy"          !IdentifierPart
-WithoutToken      = "without"       !IdentifierPart
-WhoseToken        = "whose"         !IdentifierPart
-WhereToken        = "where"         !IdentifierPart
-TransactionToken  = "transaction"   !IdentifierPart
-TimeoutToken      = "timeout"       !IdentifierPart
-AboutToken        = "about"         !IdentifierPart
-AboveToken        = "above"         !IdentifierPart
-AfterToken        = "after"         !IdentifierPart
-AgainstToken      = "against"       !IdentifierPart
-ApartFromToken    = "apart from"    !IdentifierPart
-AroundToken       = "around"        !IdentifierPart
-AsideFromToken    = "aside from"    !IdentifierPart
-AtToken           = "at"            !IdentifierPart
-BackToken         = "back"          !IdentifierPart
-BeforeToken       = "before"        !IdentifierPart
-BeginningToken    = "beginning"     !IdentifierPart
-BehindToken       = "behind"        !IdentifierPart
-BelowToken        = "below"         !IdentifierPart
-BeneathToken      = "beneath"       !IdentifierPart
-BesideToken       = "beside"        !IdentifierPart
-BetweenToken      = "between"       !IdentifierPart
-ButToken          = "but"           !IdentifierPart
-ConsideringToken  = "considering"   !IdentifierPart 
-DoesToken         = "does"          !IdentifierPart
-EighthToken       = "eighth"        !IdentifierPart
-EqualToken        = "equal"         !IdentifierPart 
-EqualsToken       = "equals"        !IdentifierPart
-ErrorToken        = "error"         !IdentifierPart
-EveryToken        = "every"         !IdentifierPart
-ExitToken         = "exit"          !IdentifierPart
-FifthToken        = "fifth"         !IdentifierPart
-FirstToken        = "first"         !IdentifierPart
-FourthToken       = "fourth"        !IdentifierPart
-FrontToken        = "front"         !IdentifierPart
-GlobalToken       = "global"        !IdentifierPart
-GetToken          = "get"           !IdentifierPart
-IgnoringToken     = "ignoring"      !IdentifierPart
-InsteadOfToken    = "instead of"    !IdentifierPart
-IntoToken         = "into"          !IdentifierPart
-IsToken           = "is"            !IdentifierPart
-ItToken           = "it"            !IdentifierPart
-ItsToken          = "its"           !IdentifierPart
-LastToken         = "last"          !IdentifierPart
-LocalToken        = "local"         !IdentifierPart
-MeToken           = "me"            !IdentifierPart
-MiddleToken       = "middle"        !IdentifierPart
-MyToken           = "my"            !IdentifierPart
-OntoToken         = "onto"          !IdentifierPart
-NinthToken        = "ninth"         !IdentifierPart
-ThruToken         = "thru"          !IdentifierPart
-OutOfToken        = "out of"        !IdentifierPart
-OverToken         = "over"          !IdentifierPart
-PutToken          = "put"           !IdentifierPart 
-ThroughToken      = "through"       !IdentifierPart
-ThirdToken        = "third"         !IdentifierPart
-ThatToken         = "that"          !IdentifierPart
-TenthToken        = "tenth"         !IdentifierPart
-TellToken         = "tell"          !IdentifierPart
-SomeToken         = "some"          !IdentifierPart
-SixthToken        = "sixth"         !IdentifierPart
-SinceToken        = "since"         !IdentifierPart
-SeventhToken      = "seventh"       !IdentifierPart
-SecondToken       = "second"        !IdentifierPart
-ReferenceToken    = "reference"     !IdentifierPart
-RefToken          = "ref"           !IdentifierPart
-StartsWithToken   = ("start with" / "starts with" / "begin with" / "begins with") !IdentifierPart
-EndsWithToken     = ("end with" / "ends with") !IdentifierPart
-PropertyToken     = ("property" / "prop") !IdentifierPart
-ScriptToken       = "script"        !IdentifierPart
-GivenToken        = "given"         !IdentifierPart
+AndToken          = "and"              !IdentifierPart
+OrToken           = "or"               !IdentifierPart
+ReturnToken       = "return"           !IdentifierPart
+SetToken          = "set"              !IdentifierPart
+IfToken           = "if"               !IdentifierPart
+TheToken          = "the"              !IdentifierPart
+ThenToken         = "then"             !IdentifierPart
+ElseToken         = "else"             !IdentifierPart
+EndToken          = "end"              !IdentifierPart
+ForToken          = "for"              !IdentifierPart
+TrueToken         = "true"             !IdentifierPart
+FalseToken        = "false"            !IdentifierPart
+NullToken         = "null"             !IdentifierPart
+MissingValueToken = "missing value"    !IdentifierPart
+UseToken          = "use"              !IdentifierPart
+ThisToken         = "this"             !IdentifierPart
+ThrowToken        = "throw"            !IdentifierPart
+BreakToken        = "break"            !IdentifierPart
+ContinueToken     = "continue"         !IdentifierPart
+WhileToken        = "while"            !IdentifierPart
+RepeatToken       = "repeat"           !IdentifierPart
+TimesToken        = "times"            !IdentifierPart
+UntilToken        = "until"            !IdentifierPart
+InToken           = "in"               !IdentifierPart
+OfToken           = "of"               !IdentifierPart
+TryToken          = "try"              !IdentifierPart
+OnToken           = "on"               !IdentifierPart
+ToToken           = "to"               !IdentifierPart
+CatchToken        = "catch"            !IdentifierPart
+DefaultToken      = "default"          !IdentifierPart
+NotToken          = "not"              !IdentifierPart
+FromToken         = "from"             !IdentifierPart
+WithToken         = "with"             !IdentifierPart
+AsToken           = "as"               !IdentifierPart
+ByToken           = "by"               !IdentifierPart
+DoToken           = "do"               !IdentifierPart
+UndefinedToken    = "undefined"        !IdentifierPart
+DivToken          = "div"              !IdentifierPart
+ModToken          = "mod"              !IdentifierPart
+CopyToken         = "copy"             !IdentifierPart
+WithoutToken      = "without"          !IdentifierPart
+WhoseToken        = "whose"            !IdentifierPart
+WhereToken        = "where"            !IdentifierPart
+TransactionToken  = "transaction"      !IdentifierPart
+TimeoutToken      = "timeout"          !IdentifierPart
+AboutToken        = "about"            !IdentifierPart
+AboveToken        = "above"            !IdentifierPart
+AfterToken        = "after"            !IdentifierPart
+AgainstToken      = "against"          !IdentifierPart
+ApartFromToken    = "apart from"       !IdentifierPart
+AroundToken       = "around"           !IdentifierPart
+AsideFromToken    = "aside from"       !IdentifierPart
+AtToken           = "at"               !IdentifierPart
+BackToken         = "back"             !IdentifierPart
+BeforeToken       = "before"           !IdentifierPart
+BeginningToken    = "beginning"        !IdentifierPart
+BehindToken       = "behind"           !IdentifierPart
+BelowToken        = "below"            !IdentifierPart
+BeneathToken      = "beneath"          !IdentifierPart
+BesideToken       = "beside"           !IdentifierPart
+BetweenToken      = "between"          !IdentifierPart
+ButToken          = "but"              !IdentifierPart
+ConsideringToken  = "considering"      !IdentifierPart 
+DoesToken         = "does"             !IdentifierPart
+EighthToken       = "eighth"           !IdentifierPart
+EqualToken        = "equal"            !IdentifierPart 
+EqualsToken       = "equals"           !IdentifierPart
+ErrorToken        = "error"            !IdentifierPart
+EveryToken        = "every"            !IdentifierPart
+ExitToken         = "exit"             !IdentifierPart
+FifthToken        = "fifth"            !IdentifierPart
+FirstToken        = "first"            !IdentifierPart
+FourthToken       = "fourth"           !IdentifierPart
+FrontToken        = "front"            !IdentifierPart
+GlobalToken       = "global"           !IdentifierPart
+GetToken          = "get"              !IdentifierPart
+IgnoringToken     = "ignoring"         !IdentifierPart
+InsteadOfToken    = "instead of"       !IdentifierPart
+IntoToken         = "into"             !IdentifierPart
+IsToken           = "is"               !IdentifierPart
+ItToken           = "it"               !IdentifierPart
+ItsToken          = "its"              !IdentifierPart
+LastToken         = "last"             !IdentifierPart
+LocalToken        = "local"            !IdentifierPart
+MeToken           = "me"               !IdentifierPart
+MiddleToken       = "middle"           !IdentifierPart
+MyToken           = "my"               !IdentifierPart
+OntoToken         = "onto"             !IdentifierPart
+NinthToken        = "ninth"            !IdentifierPart
+ThruToken         = "thru"             !IdentifierPart
+OutOfToken        = "out of"           !IdentifierPart
+OverToken         = "over"             !IdentifierPart
+PutToken          = "put"              !IdentifierPart 
+ThroughToken      = "through"          !IdentifierPart
+ThirdToken        = "third"            !IdentifierPart
+ThatToken         = "that"             !IdentifierPart
+TenthToken        = "tenth"            !IdentifierPart
+TellToken         = "tell"             !IdentifierPart
+SomeToken         = "some"             !IdentifierPart
+SixthToken        = "sixth"            !IdentifierPart
+SinceToken        = "since"            !IdentifierPart
+SeventhToken      = "seventh"          !IdentifierPart
+SecondToken       = "second"           !IdentifierPart
+ReferenceToken    = "reference"        !IdentifierPart
+RefToken          = "ref"              !IdentifierPart
+StartsWithToken   = ("start" / "begin") "s"? " with" !IdentifierPart
+EndsWithToken     = "end" "s"? " with" !IdentifierPart
+PropertyToken     = "prop" "erty"?     !IdentifierPart
+ScriptToken       = "script"           !IdentifierPart
+GivenToken        = "given"            !IdentifierPart
+AsToken           = "as"               !IdentifierPart
+ListToken         = "list"             !IdentifierPart
+TextToken         = "Unicode "? "text" !IdentifierPart
+IntegerToken      = "integer"          !IdentifierPart
+RealToken         = "real"             !IdentifierPart
 __
   = (WhiteSpace / LineTerminatorSequence / Comment / TheToken / "¬")*
 
@@ -815,13 +821,28 @@ EndsWithExpression
       });
     }
 
+// Docs: https://developer.apple.com/library/mac/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_operators.html#//apple_ref/doc/uid/TP40000983-CH5g-BAJEGEEC
 ConcatenativeExpression
-  = first:AdditiveExpression
-    rest:(__ ConcatenativeOperator __ AdditiveExpression)*
+  = first:CoercionExpression
+    rest:(__ ConcatenativeOperator __ CoercionExpression)*
     { return buildBinaryExpression(first, rest); }
 
 ConcatenativeOperator
   = $("&" !"&")
+
+// Docs: https://developer.apple.com/library/mac/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_operators.html#//apple_ref/doc/uid/TP40000983-CH5g-SW5
+// @TODO support coercion to a list of classes
+CoercionExpression
+  = argument:AdditiveExpression __ AsToken __ coercionClass:CoerceToClass {
+    return insertLocationData(new ast.CoercionExpression(argument, coercionClass), text(), location());
+  }
+  / AdditiveExpression
+
+CoerceToClass
+  = ListToken
+  / TextToken
+  / IntegerToken
+  / RealToken
 
 AdditiveExpression
   = first:MultiplicativeExpression
