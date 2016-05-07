@@ -37,17 +37,21 @@ class Node {
         return this._codegen ? this._codegen() : this;
     }
 
-    static assignObjectProperty(name, value) {
+    assignObjectProperty(name, value) {
         return {
             "type": "ExpressionStatement",
+            "range": this.range,
             "expression": {
                 "type": "AssignmentExpression",
+                "range": this.range,
                 "operator": "=",
                 "left": {
                     "type": "MemberExpression",
                     "computed": false,
+                    "range": this.range,
                     "object": {
-                        "type": "ThisExpression"
+                        "type": "ThisExpression",
+                        "range": this.range,
                     },
                     "property": name
                 },

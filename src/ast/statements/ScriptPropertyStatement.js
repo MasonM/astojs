@@ -18,7 +18,7 @@ class ScriptPropertyStatement extends Node {
         this.init = this.initialValue.codegen();
         if (!this.parent || this.parent.type !== "FunctionDeclaration") {
             // top-level script property
-            Object.assign(this, Node.assignObjectProperty(this.id, this.init));
+            Object.assign(this, this.assignObjectProperty(this.id, this.init));
         }
         return this;
     }

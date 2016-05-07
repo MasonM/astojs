@@ -44,11 +44,11 @@ class ScriptDeclarationStatement extends Node {
             "body": [],
         };
         for (var i = 0; i < this.properties.length; i++) {
-            this.body.body.push(Node.assignObjectProperty(this.properties[i].id, this.properties[i].init));
+            this.body.body.push(this.assignObjectProperty(this.properties[i].id, this.properties[i].init));
         }
         for (var i = 0; i < this.handlers.length; i++) {
             this.handlers[i].type = "FunctionExpression";
-            this.body.body.push(Node.assignObjectProperty(this.handlers[i].id, this.handlers[i]));
+            this.body.body.push(this.assignObjectProperty(this.handlers[i].id, this.handlers[i]));
         }
         if (this.implicitrun && this.implicitrun.body.length > 0) {
             // make the implicit run handler explicit
@@ -65,7 +65,7 @@ class ScriptDeclarationStatement extends Node {
                 "generator": false,
                 "expression": false
             };
-            this.body.body.push(Node.assignObjectProperty(this.implicitrun.id, this.implicitrun));
+            this.body.body.push(this.assignObjectProperty(this.implicitrun.id, this.implicitrun));
         }
         return this;
     }
