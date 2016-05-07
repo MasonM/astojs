@@ -80,6 +80,11 @@ describe('arithmetic expressions:', function () {
     it('exponentiation',  generateTest('2^4', 'Math.pow(2,4)'));
 });
 
+describe('parenthesized expressions:', function () {
+    it('single group',    generateTest('2 * (4 + 2)', '2*(4+2)'));
+    it('nested group',    generateTest('(2 * (4 / (3 - 1)))', '2*(4/(3-1))'));
+});
+
 describe('logical expressions:', function () {
     it('conjunction', generateTest('a and b', 'a&&b'));
     it('disjunction', generateTest('a or b', 'a||b'));

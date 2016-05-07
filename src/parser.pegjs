@@ -886,6 +886,7 @@ PrimaryExpression
   / Literal
   / ListLiteral
   / RecordLiteral
+  / "(" __ expression:Expression __ ")" { return expression; }
 
 ThisExpression
   = ThisToken {
