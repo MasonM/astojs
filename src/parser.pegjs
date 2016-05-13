@@ -907,7 +907,7 @@ Expression
       
 ListLiteral
   = "{" __ "}" { 
-    return insertLocationDatan(new ast.ListExpression([]), text(), location()); 
+    return insertLocationData(new ast.ListExpression([]), text(), location()); 
   }
   / "{" __ elements:ItemList __ "}" {
     return insertLocationData(new ast.ListExpression(elements), text(), location());
