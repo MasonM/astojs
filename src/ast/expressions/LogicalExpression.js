@@ -15,9 +15,9 @@ class LogicalExpression extends Node {
         this.right.parent = this;
     }
 
-    _codegen() {
-        this.left = this.left.codegen();
-        this.right = this.right.codegen();
+    _transformToESTree() {
+        this.left = this.left.transformToESTree();
+        this.right = this.right.transformToESTree();
         return this;
     }
 }

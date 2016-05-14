@@ -14,9 +14,9 @@ class VariableDeclarationStatement extends Node {
         if (init) this.init.parent = this;
     }
 
-    _codegen() {
-        this.id = this.id.codegen();
-        if (this.init) this.init = this.init.codegen();
+    _transformToESTree() {
+        this.id = this.id.transformToESTree();
+        if (this.init) this.init = this.init.transformToESTree();
 
         this.declarations = [{
             "type": "VariableDeclarator",

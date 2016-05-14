@@ -19,14 +19,14 @@ class BlockStatement extends Node {
         });
     }
 
-    _codegen() {
+    _transformToESTree() {
         for (var i = 0; i < this.body.length;) {
             var statement = this.body[i];
 
             if (!statement || statement.codeGenerated) {
                 i++;
                 continue;
-            } else if (statement && statement.codegen()) {
+            } else if (statement && statement.transformToESTree()) {
                 this.body[this.body.indexOf(statement)] = statement;
                 i++;
             } else {

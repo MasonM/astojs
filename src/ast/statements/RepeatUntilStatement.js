@@ -13,7 +13,7 @@ class RepeatUntilStatement extends Node {
         this.body.parent = this;
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = "WhileStatement";
         this.test = {
             type: "UnaryExpression",
@@ -21,7 +21,7 @@ class RepeatUntilStatement extends Node {
             prefix: true,
             argument: this.test
         };
-        this.body = this.body.blockWrap().codegen();
+        this.body = this.body.blockWrap().transformToESTree();
         return this;
     }
 }

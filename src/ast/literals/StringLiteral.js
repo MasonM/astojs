@@ -12,7 +12,7 @@ class StringLiteral extends Node {
         this.column = column;
     }
 
-    _codegen() {
+    _transformToESTree() {
         var elements = [];
         _(this.chars).each(function(value) {
             var lastElement;
@@ -39,7 +39,7 @@ class StringLiteral extends Node {
                 }
             } else {
                 value.parent = this;
-                elements.push(value.codegen());
+                elements.push(value.transformToESTree());
             }
         });
 

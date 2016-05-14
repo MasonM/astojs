@@ -12,10 +12,10 @@ class ScriptPropertyStatement extends Node {
         this.initialValue.parent = this;
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = "VariableDeclarator";
-        this.id = this.label.codegen();
-        this.init = this.initialValue.codegen();
+        this.id = this.label.transformToESTree();
+        this.init = this.initialValue.transformToESTree();
         if (!this.parent || this.parent.type !== "FunctionDeclaration") {
             // top-level script property
             Object.assign(this, this.assignObjectProperty(this.id, this.init));

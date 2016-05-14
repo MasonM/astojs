@@ -16,10 +16,10 @@ class IfStatement extends Node {
         if (this.alternate) this.alternate.parent = this;
     }
 
-    _codegen() {
-        this.test = this.test.codegen();
-        this.consequent = this.consequent.blockWrap().codegen();
-        if (this.alternate) this.alternate = this.alternate.blockWrap().codegen();
+    _transformToESTree() {
+        this.test = this.test.transformToESTree();
+        this.consequent = this.consequent.blockWrap().transformToESTree();
+        if (this.alternate) this.alternate = this.alternate.blockWrap().transformToESTree();
         return this;
     }
 }

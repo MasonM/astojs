@@ -10,8 +10,8 @@ class ExpressionStatement extends Node {
         this.expression.parent = this;
     }
 
-    _codegen() {
-        this.expression = this.expression.codegen();
+    _transformToESTree() {
+        this.expression = this.expression.transformToESTree();
         return this;
     }
 }

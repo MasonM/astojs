@@ -11,9 +11,9 @@ class ListExpression extends Node {
         _(items).each(item => { if (item) item.parent = this; });
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = 'ArrayExpression';
-        this.elements = _(this.items).compact().map(item => item.codegen())
+        this.elements = _(this.items).compact().map(item => item.transformToESTree())
         return this;
     }
 }

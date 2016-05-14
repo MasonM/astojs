@@ -13,14 +13,14 @@ class RecordExpression extends Node {
         _(properties).each(function(property) { property.parent = self; });
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = 'NewExpression';
         this.callee = {
             "type": "Identifier",
             "name": "Record"
         }
         for (var i = 0; i < this.properties.length; i++) {
-            this.properties[i] = this.properties[i].codegen();
+            this.properties[i] = this.properties[i].transformToESTree();
         }
         Object.defineProperty(this, 'arguments', {
             value: [{ "type": "ObjectExpression", "properties": this.properties }],

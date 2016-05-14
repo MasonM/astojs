@@ -11,8 +11,8 @@ class CoercionExpression extends Node {
         this.coercionClass = coercionClass;
     }
 
-    _codegen() {
-        this.argument = this.argument.codegen();
+    _transformToESTree() {
+        this.argument = this.argument.transformToESTree();
         switch (this.coercionClass) {
         }
         return this;

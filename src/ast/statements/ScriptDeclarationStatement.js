@@ -22,7 +22,7 @@ class ScriptDeclarationStatement extends Node {
         _(handlers).each(function(h) { h.parent = self; });
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = 'FunctionDeclaration';
         this.defaults = [];
         this.rest = null;
@@ -30,13 +30,13 @@ class ScriptDeclarationStatement extends Node {
         this.expression = false;
         this.params = [];
 
-        this.id = this.id.codegen();
-        this.implicitrun = this.implicitrun.codegen();
+        this.id = this.id.transformToESTree();
+        this.implicitrun = this.implicitrun.transformToESTree();
         for (var i = 0; i < this.properties.length; i++) {
-            this.properties[i] = this.properties[i].codegen();
+            this.properties[i] = this.properties[i].transformToESTree();
         }
         for (var i = 0; i < this.handlers.length; i++) {
-            this.handlers[i] = this.handlers[i].codegen();
+            this.handlers[i] = this.handlers[i].transformToESTree();
         }
 
         this.body = {

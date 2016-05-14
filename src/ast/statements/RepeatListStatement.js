@@ -15,11 +15,11 @@ class RepeatListStatement extends Node {
         this.body.parent = this;
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = "ForInStatement";
-        this.left = this.loopVariable.codegen();
-        this.right = this.list.codegen();
-        this.body = this.body.blockWrap().codegen();
+        this.left = this.loopVariable.transformToESTree();
+        this.right = this.list.transformToESTree();
+        this.body = this.body.blockWrap().transformToESTree();
         return this;
     }
 }

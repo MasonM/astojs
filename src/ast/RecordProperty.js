@@ -18,9 +18,9 @@ class RecordProperty extends Node {
         this.value.parent = this;
     }
 
-    _codegen() {
-        this.key = this.key.codegen(false);
-        this.value = this.value.codegen(this.parent.type != "ObjectPattern");
+    _transformToESTree() {
+        this.key = this.key.transformToESTree(false);
+        this.value = this.value.transformToESTree(this.parent.type != "ObjectPattern");
         return this;
     }
 }

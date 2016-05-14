@@ -25,12 +25,12 @@ class SubroutinePositionalDeclarationStatement extends Node {
         });
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = 'FunctionDeclaration';
-        this.id = this.id.codegen();
-        this.body = this.body.codegen();
+        this.id = this.id.transformToESTree();
+        this.body = this.body.transformToESTree();
         for (var i = 0; i < this.params.length; i++) {
-            this.params[i] = this.params[i].codegen();
+            this.params[i] = this.params[i].transformToESTree();
         }
         return this;
     }

@@ -37,26 +37,26 @@ class SubroutineLabelledDeclarationStatement extends Node {
         }
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = 'FunctionDeclaration';
-        this.id = this.id.codegen();
-        this.body = this.body.codegen();
+        this.id = this.id.transformToESTree();
+        this.body = this.body.transformToESTree();
         this.params = [{
             "type": "Identifier",
                 "name": "args"
         }];
-        if (this.directParam) this.directParam = this.directParam.codegen();
+        if (this.directParam) this.directParam = this.directParam.transformToESTree();
 
         var paramAssignments = [];
         if (this.directParam) {
             paramAssignments.push(this.getVariableDeclaratorForParam(this.directParam));
         }
         for (var i = 0; i < this.asLabelledParams.length; i++) {
-            this.asLabelledParams[i] = this.asLabelledParams[i].codegen();
+            this.asLabelledParams[i] = this.asLabelledParams[i].transformToESTree();
             paramAssignments.push(this.getVariableDeclaratorForParam(this.asLabelledParams[i]));
         }
         for (var i = 0; i < this.userLabelledParams.length; i++) {
-            this.userLabelledParams[i] = this.userLabelledParams[i].codegen();
+            this.userLabelledParams[i] = this.userLabelledParams[i].transformToESTree();
             paramAssignments.push(this.getVariableDeclaratorForParam(this.userLabelledParams[i]));
         }
         this.body.body.unshift({

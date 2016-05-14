@@ -16,13 +16,13 @@ class Program extends Node {
         });
     }
 
-    _codegen() {
+    _transformToESTree() {
         for (var i = 0; i < this.body.length;) {
             var statement = this.body[i];
 
             if (!statement || statement.codeGenerated) {
                 i++;
-            } else if (statement.codegen && statement.codegen()) {
+            } else if (statement.transformToESTree && statement.transformToESTree()) {
                 this.body[this.body.indexOf(statement)] = statement;
                 i++;
             } else {

@@ -28,13 +28,13 @@ class Node {
         return block;
     }
 
-    codegen() {
+    transformToESTree() {
         if (this.codeGenerated) {
             return false;
         }
 
         this.codeGenerated = true;
-        return this._codegen ? this._codegen() : this;
+        return this._transformToESTree ? this._transformToESTree() : this;
     }
 
     assignObjectProperty(name, value) {

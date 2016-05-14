@@ -10,7 +10,7 @@ module.exports.compile = function (parser, sourceCode, options) {
     }
 
     let comments = parser.parse(sourceCode, { startRule: "StartComments" });
-    let javascriptAst = applescriptParseResult.ast.codegen();
+    let javascriptAst = applescriptParseResult.ast.transformToESTree();
     javascriptAst = escodegen.attachComments(javascriptAst, comments, javascriptAst.body); 
 
     return escodegen.generate(javascriptAst, options);

@@ -12,8 +12,8 @@ class UnaryExpression extends Node {
         this.prefix = true;
     }
 
-    _codegen() {
-        this.argument = this.argument.codegen();
+    _transformToESTree() {
+        this.argument = this.argument.transformToESTree();
         return this;
     }
 }

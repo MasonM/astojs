@@ -11,9 +11,9 @@ class LabelledParameter extends Node {
         this.id.parent = this;
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = "Identifier";
-        this.id = this.id.codegen();
+        this.id = this.id.transformToESTree();
         return this;
     }
 }

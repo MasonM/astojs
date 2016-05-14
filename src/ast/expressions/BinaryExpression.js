@@ -17,11 +17,11 @@ class BinaryExpression extends Node {
         this.right.parent = this;
     }
 
-    _codegen() {
+    _transformToESTree() {
         var leftType = this.left.type,
             rightType = this.right.type;
-        this.left = this.left.codegen();
-        this.right = this.right.codegen();
+        this.left = this.left.transformToESTree();
+        this.right = this.right.transformToESTree();
         switch (this.operator) {
             case "÷":
                 this.operator = '/';

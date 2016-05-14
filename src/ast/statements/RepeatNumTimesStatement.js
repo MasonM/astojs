@@ -11,7 +11,7 @@ class RepeatNumTimesStatement extends Node {
         this.body.parent = this;
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = "ForStatement";
         var id = {
             "type": "Identifier",
@@ -39,7 +39,7 @@ class RepeatNumTimesStatement extends Node {
             "prefix": false,
             "argument": id,
         };
-        this.body = this.body.blockWrap().codegen();
+        this.body = this.body.blockWrap().transformToESTree();
         return this;
     }
 }

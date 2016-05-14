@@ -15,7 +15,7 @@ class RepeatRangeStatement extends Node {
         this.body.parent = this;
     }
 
-    _codegen() {
+    _transformToESTree() {
         this.type = "ForStatement";
         this.init = {
             "type": "VariableDeclaration",
@@ -48,8 +48,8 @@ class RepeatRangeStatement extends Node {
                 "right": this.step,
             };
         }
-        this.loopVariable = this.loopVariable.codegen();
-        this.body = this.body.blockWrap().codegen();
+        this.loopVariable = this.loopVariable.transformToESTree();
+        this.body = this.body.blockWrap().transformToESTree();
         return this;
     }
 }
