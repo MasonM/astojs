@@ -1,6 +1,7 @@
 'use strict';
 
-let escodegen = require('escodegen'), pegUtil = require('pegjs-util')
+let escodegen = require('escodegen'),
+    pegUtil = require('pegjs-util')
 
 module.exports.compile = function (parser, sourceCode, options) {
     let applescriptParseResult = pegUtil.parse(parser, sourceCode);
