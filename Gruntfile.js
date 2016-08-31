@@ -9,6 +9,7 @@
                 options: {
                     reporter: "spec",
                     bail: true,
+                    ui: "tdd",
                     timeout: 15000
                 },
                 all: ["test/*.js"]
